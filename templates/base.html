@@ -9,7 +9,7 @@
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <title>{{judul}}</title>
     <!-- Favicon-->
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <!-- <link rel="icon" href="favicon.ico" type="image/x-icon"> -->
 
     {% include "snippets/css.html" %}
 </head>
@@ -40,9 +40,18 @@
         <div class="container-fluid">
             <div class="navbar-header">
                 <a href="javascript:void(0);" class="bars"></a>
-                <a class="navbar-brand" href="">
-                    Playverse - UCP
-                    <!-- <i class="material-icons">sports_esports</i> -->
+                <a class="navbar-brand" href="{% url 'main:index' %}">
+                    <table style="margin-top: -5px;">
+                        <tr>
+                            <td>
+                                <img alt="icon" src="https://i.ibb.co/gWGgmjX/logo-pv.png" width="30px">
+                            </td>
+                            <td width="10px"></td>
+                            <td>
+                                Playverse &bull; UCP
+                            </td>
+                        </tr>
+                    </table>
                 </a>
             </div>
         </div>
@@ -54,21 +63,19 @@
             <!-- User Info -->
             <div class="user-info">
                 <div class="image">
-                    <img src="{% static 'images/user.png' %}" width="48" height="48" alt="User" />
+                    <img src="{{ 'https://forum.playverse.org/'|add:request.session.avatar }}" width="48" height="48" alt="User" onerror="this.onerror=null; this.src=`https://forum.playverse.org/images/default_avatar.png`;"/>
                 </div>
                 <div class="info-container">
-                    <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">John Doe</div>
-                    <div class="email">john.doe@example.com</div>
+                    <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{ request.session.username }}</div>
+                    <div class="email">{{ request.session.email }}</div>
                     <div class="btn-group user-helper-dropdown">
-                        <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">keyboard_arrow_down</i>
+                        <i class="material-icons" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="true">keyboard_arrow_down</i>
                         <ul class="dropdown-menu pull-right">
                             <li><a href="javascript:void(0);"><i class="material-icons">person</i>Profile</a></li>
                             <li role="separator" class="divider"></li>
-                            <li><a href="javascript:void(0);"><i class="material-icons">group</i>Followers</a></li>
-                            <li><a href="javascript:void(0);"><i class="material-icons">shopping_cart</i>Sales</a></li>
-                            <li><a href="javascript:void(0);"><i class="material-icons">favorite</i>Likes</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li><a href="javascript:void(0);"><i class="material-icons">input</i>Sign Out</a></li>
+                            <li><a href="{% url 'main:logout' %}"><i class="material-icons">input</i>Sign Out</a></li>
                         </ul>
                     </div>
                 </div>
@@ -78,57 +85,17 @@
             <div class="menu">
                 <ul class="list">
                     <li class="header">MAIN NAVIGATION</li>
-                    <li class="active">
-                        <a href="index.html">
+                    <li class="{% if request.path == '/' %}active{% endif %}">
+                        <a href="{% url 'main:index' %}">
                             <i class="material-icons">home</i>
                             <span>Home</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="javascript:void(0);" class="menu-toggle">
-                            <i class="material-icons">widgets</i>
-                            <span>Widgets</span>
+                    <li class="{% if request.path == '/account' %}active{% endif %}">
+                        <a href="">
+                            <i class="material-icons">account_circle</i>
+                            <span>Account</span>
                         </a>
-                        <ul class="ml-menu">
-                            <li>
-                                <a href="javascript:void(0);" class="menu-toggle">
-                                    <span>Cards</span>
-                                </a>
-                                <ul class="ml-menu">
-                                    <li>
-                                        <a href="pages/widgets/cards/basic.html">Basic</a>
-                                    </li>
-                                    <li>
-                                        <a href="pages/widgets/cards/colored.html">Colored</a>
-                                    </li>
-                                    <li>
-                                        <a href="pages/widgets/cards/no-header.html">No Header</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0);" class="menu-toggle">
-                                    <span>Infobox</span>
-                                </a>
-                                <ul class="ml-menu">
-                                    <li>
-                                        <a href="pages/widgets/infobox/infobox-1.html">Infobox-1</a>
-                                    </li>
-                                    <li>
-                                        <a href="pages/widgets/infobox/infobox-2.html">Infobox-2</a>
-                                    </li>
-                                    <li>
-                                        <a href="pages/widgets/infobox/infobox-3.html">Infobox-3</a>
-                                    </li>
-                                    <li>
-                                        <a href="pages/widgets/infobox/infobox-4.html">Infobox-4</a>
-                                    </li>
-                                    <li>
-                                        <a href="pages/widgets/infobox/infobox-5.html">Infobox-5</a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
                     </li>
                 </ul>
             </div>

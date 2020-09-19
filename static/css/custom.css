@@ -21,3 +21,34 @@
     -moz-font-feature-settings: 'liga';
     -moz-osx-font-smoothing: grayscale;
 }
+
+th, td {
+    vertical-align: middle !important;
+    white-space: nowrap !important;
+}
+
+.dataTables_processing{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    margin-left: -50%;
+    margin-top: -25px;
+    padding-top: 20px;
+    text-align: center;
+}
+
+.card {
+    border-radius: 10px;
+}
+
+.left-side-profil {
+    padding: 20px;
+}
+
+.left-side-profil p, .left-side-profil h3 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -ms-text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+}
