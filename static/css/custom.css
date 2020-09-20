@@ -52,3 +52,12 @@ th, td {
     -ms-text-overflow: ellipsis;
     -o-text-overflow: ellipsis;
 }
+
+.login-box {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+.login-page {
+    background-color: #c52828 !important;
+}

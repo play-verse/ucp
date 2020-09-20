@@ -7,9 +7,9 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>{{judul}}</title>
+    <title>{{judul}} &bull; Playverse UCP</title>
     <!-- Favicon-->
-    <!-- <link rel="icon" href="favicon.ico" type="image/x-icon"> -->
+    <link rel="icon" href="https://forum.playverse.org/favicon.ico" type="image/x-icon">
 
     {% include "snippets/css.html" %}
 </head>
@@ -91,10 +91,10 @@
                             <span>Home</span>
                         </a>
                     </li>
-                    <li class="{% if request.path == '/account' %}active{% endif %}">
-                        <a href="">
+                    <li class="{% if request.path == '/akun-samp/' %}active{% endif %}">
+                        <a href="{% url 'main:akun_samp' %}">
                             <i class="material-icons">account_circle</i>
-                            <span>Account</span>
+                            <span>Akun SA:MP</span>
                         </a>
                     </li>
                 </ul>
@@ -103,7 +103,7 @@
             <!-- Footer -->
             <div class="legal">
                 <div class="copyright">
-                    Control Panel &copy; 2020 &bull; <a href="javascript:void(0);">Playverse Group</a>.
+                    Control Panel &copy; 2020 &bull; <a href="https://playverse.org/">Playverse Group</a>.
                 </div>
                 <div class="version">
                     <b>Version: </b> 0.0.1 Alpha
@@ -122,6 +122,15 @@
 
             <!-- Widgets -->
             <div class="row clearfix">
+                {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert bg-{{ message.tags }} alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                {% endif %}
+
                 {% block content %}
                 {% endblock content %}
             </div>

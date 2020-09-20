@@ -7,19 +7,32 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>{{judul}}</title>
+    <title>{{judul}} &bull; Playverse UCP</title>
+    <link rel="icon" href="https://forum.playverse.org/favicon.ico" type="image/x-icon">
 
     {% include "snippets/css.html" %}
 </head>
 
 <body class="login-page">
     <div class="login-box">
-        <div class="logo">
-            <a href="">Playverse <b>UCP</b></a>
+        <div class="logo" style="padding-top: 10px;">
+            <a style="margin-bottom: 30px;" href="">Playverse <img src="{% static 'images/logo.png' %}" alt="" width="50px"> <b>UCP</b></a>
             <small>Bermain dengan kendali penuh pada akun anda.</small>
         </div>
         <div class="card">
             <div class="body">
+                {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert bg-{{ message.tags }} alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                {% endif %}
+
+                Silahkan login menggunakan akun <a href="https://forum.playverse.org/">forum</a>.
+                <br/><br/>
+
                 <form action="/login/" method="post">
                     {% csrf_token %}
                     <div class="input-group">

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+from django.contrib.messages import constants as messages
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -129,3 +130,49 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
+
+# Database Extended Constant
+NAMA_DATABASE_SAMP = "server_samp"
+NAMA_DATABASE_FORUM = "forum"
+
+# SA-MP Constant
+SKIN_LIST_MALE = (
+    1, 2, 7, 14, 15, 17, 19, 20, 21, 22, 24, 25, 27, 28, 30, 47, 48,
+    60, 68, 67, 72, 73, 98, 101, 125, 142, 143, 170, 179, 183, 184
+)
+
+SKIN_LIST_FEMALE = (
+    9, 11, 12, 13, 40, 41, 54, 55, 56, 69, 76, 141, 148, 150, 151,
+    157, 172, 190, 191, 192, 193, 194, 195, 198, 201, 211, 225, 233, 226, 298
+)
+
+SPAWN_POINT_REGISTER = (
+    {
+        "nama": "Pantai St. Maria",
+        "x": "288.5987",
+        "y": "-1984.3574",
+        "z": "2.4633",
+        "a": "357.0744",
+    },
+    {
+        "nama": "Kereta Api",
+        "x": "1754.5775",
+        "y": "-1898.9517",
+        "z": "13.5615",
+        "a": "269.7162",
+    },
+    {
+        "nama": "Bandara Los Santos",
+        "x": "1649.4506",
+        "y": "-2329.8547",
+        "z": "13.5469",
+        "a": "7.0336",
+    },
+)
+
+MESSAGE_TAGS = {
+    messages.ERROR: 'red',
+    messages.SUCCESS: 'green',
+}
+
+DEFAULT_LIMIT_ITEM = 150

@@ -467,3 +467,7 @@ $(function () {
 
     setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);
 });
+
+
+// Initialize the object
+$("select[name=skin]").imagepicker();

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load main_extras %}
+
+{% block content %}
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h2>
+                    <table>
+                        <tr>
+                            <td width="40px"><i class="material-icons col-red">supervised_user_circle</i></td>
+                            <td>Akun SA:MP</td>
+                        </tr>
+                    </table>
+                </h2>
+            </div>
+
+            <div class="body">
+                {% if not data %}
+                    <div class="alert alert-warning">
+                        <strong>Anda tidak memiliki Akun SA:MP!</strong> 
+                        <br/>Silahkan daftar terlebih dahulu 
+                        <a href="{% url 'main:daftar_akun_samp' %}" class="alert-link">dengan klik link ini atau tombol dibawah</a>.
+                    </div>
+                    <a class="btn btn-danger m-t-15 waves-effect" href="{% url 'main:daftar_akun_samp' %}"><i class="material-icons">person_add</i> <span>Daftar akun SA:MP</span></a>
+                {% else %}
+                    <table class="table">
+                        <caption>Informasi Akun SA-MP</caption>
+                        <tbody>
+                            <tr>
+                                <td>Username</td>
+                                <td>{{ data.nama }}</td>
+                            </tr>
+                            <tr>
+                                <td>Uang</td>
+                                <td class="text-success">${{ data.uang }}</td>
+                            </tr>
+                            <tr>
+                                <td>Lama waktu bermain</td>
+                                <td class="text-warning">{{ data.playtime }} detik</td>
+                            </tr>
+                            <tr>
+                                <td>Tanggal Register</td>
+                                <td>{{ data.join_date }}</td>
+                            </tr>
+                            <tr>
+                                <td>Skin terpakai saat ini</td>
+                                <td>
+                                    {% with "images/skin-gta/Skin_"|addstr:data.current_skin|addstr:".png" as img_src %}
+                                        <img src="{% static img_src %}" />
+                                    {% endwith %}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
