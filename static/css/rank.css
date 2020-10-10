@@ -1,0 +1,70 @@
+.low-white {
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.border-red-glow {
+    border: 1px solid red;
+    border-radius: 20px;
+    box-shadow: 0 7px 16px red;
+}
+
+@keyframes colorfirst {
+    0% {
+        box-shadow: 0 7px 20px rgb(115, 16, 180);
+    }
+    10% {
+        box-shadow: 0 7px 20px rgb(180, 16, 16);
+    }
+    20% {
+        box-shadow: 0 7px 23px rgb(152, 59, 214);
+    }
+    40% {
+        box-shadow: 0 10px 35px 15px rgb(191, 108, 247);
+    }
+    60% {
+        box-shadow: 0 10px 35px 15px rgb(236, 68, 76);
+    }
+    80% {
+        box-shadow: 0 7px 23px rgb(152, 59, 214);
+    }
+    90% {
+        box-shadow: 0 7px 20px rgb(180, 16, 16);
+    }
+    100% {
+        box-shadow: 0 7px 20px rgb(115, 16, 180);
+    }
+}
+
+.ranked {
+    transition: transform 0.2s;
+    border-radius: 20px;
+}
+
+.ranked > img {
+    border-top-right-radius: 20px;
+    border-top-left-radius: 20px;
+}
+
+.rank-first {
+    animation: colorfirst 4s infinite;
+}
+
+.ranked:hover{
+    transform: scale(1.2);
+}
+
+.col-rank:hover {
+    z-index: 99;
+}
+
+.user-link {
+    text-decoration: none !important;
+}
+
+.nama-player {
+    color: red;
+}
+
+.ranked:hover .nama-player {
+    font-weight: bold;
+}

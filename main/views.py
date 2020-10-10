@@ -251,3 +251,102 @@ def is_sudah_login(request):
         request.session.get("avatar") == None or \
         request.session.get("email") == None or \
         request.session.get("gender") == None)
+
+# Ranked
+def ranked(request):
+    context = {
+        "judul" : "Ranked List"
+    }
+    return render(request, "rank.html", context)
+
+def rank_playtime(request):
+    template = {
+        'rank': 0,
+        'uid': '',
+        'h': 0,
+        'm': 0,
+        's': 0,
+        'join_date': 'Tidak ada',
+        'avatar': '',
+        'nama': 'Tidak ada'
+    }
+
+    with connection.cursor() as cursor:
+        cursor.execute('''
+            SELECT a.nama, a.playtime, a.join_date, b.avatar, b.uid
+            FROM ''' + settings.NAMA_DATABASE_SAMP + '''.user a
+            LEFT JOIN ''' + settings.NAMA_DATABASE_FORUM + '''.mybb_users b ON a.nama = b.username
+            ORDER BY a.playtime DESC
+            LIMIT 5
+        '''
+        )
+        result = Snippet.dictfetchall(cursor)
+
+    more = []
+    for i in range(5):
+        if len(result) > i:
+            result[i]['m'], result[i]['s'] = divmod(result[i]['playtime'], 60)
+            result[i]['h'], result[i]['m'] = divmod(result[i]['m'], 60)
+            result[i]['rank'] = i + 1
+            more += [result[i]]
+        else:
+            template['rank'] = i + 1
+            more += [template]
+
+    context = {
+        "judul" : "Longest Playing Time",
+        "keterangan_dibawah_judul": '''
+            <small>
+                <i>Satuan yang digunakan dalam </i>
+            </small>
+            <label class="badge badge-primary">Playtime</label> adalah <label class="badge badge-warning">detik</label>
+        ''',
+        "first" : more[0],
+        "more"  : more[1:]
+    }
+    return render(request, "rank-playtime.html", context)
+
+def rank_richest(request):
+    template = {
+        'rank': 0,
+        'uid': '',
+        'uang_bank': 0,
+        'uang': 0,
+        'avatar': '',
+        'nama': 'Tidak ada'
+    }
+
+    with connection.cursor() as cursor:
+        cursor.execute('''
+            SELECT a.nama, IFNULL(SUM(c.nominal), 0) AS uang_bank, a.uang, b.avatar, b.uid
+            FROM ''' + settings.NAMA_DATABASE_SAMP + '''.user a
+            LEFT JOIN ''' + settings.NAMA_DATABASE_SAMP + '''.trans_atm c ON a.id = c.id_user
+            LEFT JOIN ''' + settings.NAMA_DATABASE_FORUM + '''.mybb_users b ON a.nama = b.username
+            GROUP BY a.nama
+            ORDER BY uang + IFNULL(SUM(c.nominal), 0) DESC
+            LIMIT 5
+        '''
+        )
+        result = Snippet.dictfetchall(cursor)
+
+    more = []
+    for i in range(5):
+        if len(result) > i:
+            result[i]['rank'] = i + 1
+            more += [result[i]]
+        else:
+            template['rank'] = i + 1
+            more += [template]
+
+    context = {
+        "judul" : "Richest Person",
+        "keterangan_dibawah_judul": '''
+            <small>
+                <i>Kekayaan didapat dari</i>
+            </small>
+            <label class="badge badge-primary">Uang Cash</label> + <label class="badge badge-primary">Saldo Bank</label>
+        ''',
+        "first" : more[0],
+        "more"  : more[1:]
+    }
+    return render(request, "rank-rich.html", context)

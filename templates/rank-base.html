@@ -1,0 +1,54 @@
+{% load static %}
+{% load main_extras %}
+{% load humanize %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>{{judul}} &bull; Ranked Playverse Players</title>
+    <!-- Favicon-->
+    <link rel="icon" href="https://forum.playverse.org/favicon.ico" type="image/x-icon">
+
+    <!-- Bootstrap Core Css -->
+    <link href="{% static 'css/bootstrap-4.min.css' %}" rel="stylesheet">
+
+    <!-- Animation Css -->
+    <link href="{% static 'css/animate.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/rank.css' %}" rel="stylesheet" />
+</head>
+
+<body>
+    <div class="container-fluid py-2">
+        <div class="d-flex align-items-center">
+            <div class="card w-100 border-red-glow">
+                <div class="card-header">
+                    <h3><img src="{% static 'images/ranking.svg' %}" width="50px" /> Playverse VRP Ranked &bull; {{judul}} <label
+                            class="badge badge-warning">Beta</label></h3>
+                    {{ keterangan_dibawah_judul|safe }}
+                    <br />
+                    <label class="badge badge-danger">Tanggal Saat Ini</label>
+                    <small>- {% now "jS F Y H:i" %}</small>
+                </div>
+                <div class="card-body px-5 py-5">
+                    <div class="row align-items-end">
+                        {% block content %}
+                        {% endblock content %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Card -->
+    </div>
+
+    <!-- Jquery Core Js -->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+
+    <!-- Bootstrap Core Js -->
+    <script src="{% static 'js/bootstrap-4.min.js' %}"></script>
+</body>
+
+</html>
