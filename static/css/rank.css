@@ -68,3 +68,27 @@
 .ranked:hover .nama-player {
     font-weight: bold;
 }
+
+.logo {
+    margin-bottom: 5px;
+}
+
+.logo img {
+    box-shadow: 0 3px 6px red;
+    border-radius: 100%;
+    transition: transform 0.2s;
+}
+
+.logo img:hover {
+    transform: scale(1.2);
+}
+
+.logo span {
+    margin-left: 5px;
+    font-family: 'Calibri';
+    font-size: 20px;
+}
+
+.logo a {
+    text-decoration: none;
+}

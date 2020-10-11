@@ -97,6 +97,26 @@
                             <span>Akun SA:MP</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="#" class="menu-toggle">
+                            <i class="material-icons">emoji_events</i>
+                            <span>Ranked</span>
+                        </a>
+                        <ul class="ml-menu">
+                            <li>
+                                <a href="{% url 'main:rank-richest' %}" target="_blank">
+                                    <i class="material-icons">monetization_on</i>
+                                    <span>Richest</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'main:rank-playtime' %}" target="_blank">
+                                    <i class="material-icons">av_timer</i>
+                                    <span>Playtime</span>                                    
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
             <!-- #Menu -->

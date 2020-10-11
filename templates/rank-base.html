@@ -23,11 +23,17 @@
 
 <body>
     <div class="container-fluid py-2">
-        <div class="d-flex align-items-center">
+        <div class="logo">
+            <a href="https://playverse.org/" target="_blank">
+                <img src="{% static 'images/logo.png' %}" class="logo" width="50px" />
+            </a>
+            <span class="display-4">Playverse Ranked Chart</span> 
+            <label class="badge badge-warning">Beta</label>
+        </div>
+        <div class="d-flex align-items-center mt-2">
             <div class="card w-100 border-red-glow">
                 <div class="card-header">
-                    <h3><img src="{% static 'images/ranking.svg' %}" width="50px" /> Playverse VRP Ranked &bull; {{judul}} <label
-                            class="badge badge-warning">Beta</label></h3>
+                    <h3><img src="{% static 'images/ranking.svg' %}" width="50px" /> Playverse VRP Ranked &bull; {{judul}}</h3>
                     {{ keterangan_dibawah_judul|safe }}
                     <br />
                     <label class="badge badge-danger">Tanggal Saat Ini</label>
@@ -41,6 +47,8 @@
                 </div>
             </div>
         </div>
+        <br/>
+        <small>Copyright &copy; 2020 &bull; Playverse Official Teams</small>
         <!-- Card -->
     </div>
 
