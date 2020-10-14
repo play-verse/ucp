@@ -227,6 +227,16 @@ def daftar_akun_samp(request):
                     ]
                 )
 
+            with connection.cursor() as cursor:
+                cursor.execute('''
+                    INSERT INTO ''' + settings.NAMA_DATABASE_SAMP + '''.user_achievement(id_user) 
+                    VALUES(%s)
+                ''',
+                    [
+                        str(uid)
+                    ]
+                )
+
             messages.add_message(request, messages.SUCCESS, 'Berhasil mendaftarkan akun baru.')
             return HttpResponseRedirect('/akun-samp/')
         # Jika form tidak valid
