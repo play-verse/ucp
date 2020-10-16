@@ -265,7 +265,6 @@ def is_sudah_login(request):
 # Ranked
 def ranked(request):
     context = {
-        "judul" : "Ranked List"
     }
     return render(request, "rank.html", context)
 
@@ -305,6 +304,7 @@ def rank_playtime(request):
 
     context = {
         "judul" : "Longest Playing Time",
+        "icon": "images/back-in-time.svg",
         "keterangan_dibawah_judul": '''
             <small>
                 <i>Satuan yang digunakan dalam </i>
@@ -350,6 +350,7 @@ def rank_richest(request):
 
     context = {
         "judul" : "Richest Person",
+        "icon": "images/rich-man.svg",
         "keterangan_dibawah_judul": '''
             <small>
                 <i>Kekayaan didapat dari</i>
@@ -360,3 +361,144 @@ def rank_richest(request):
         "more"  : more[1:]
     }
     return render(request, "rank-rich.html", context)
+
+def rank_fisherman(request):
+    template = {
+        'rank': 0,
+        'uid': '',
+        'berlaut': 0,
+        'ikan_arwana': 0,
+        'ikan_kakap': 0,
+        'ikan_mas': 0,
+        'ikan_mujair': 0,
+        'avatar': '',
+        'nama': 'Tidak ada'
+    }
+
+    with connection.cursor() as cursor:
+        cursor.execute('''
+            SELECT a.nama, c.berlaut, c.ikan_arwana, c.ikan_kakap, c.ikan_mas, c.ikan_mujair, b.avatar, b.uid
+            FROM ''' + settings.NAMA_DATABASE_SAMP + '''.user a
+            LEFT JOIN ''' + settings.NAMA_DATABASE_FORUM + '''.mybb_users b ON a.nama = b.username
+            LEFT JOIN ''' + settings.NAMA_DATABASE_SAMP + '''.user_achievement c ON c.id_user = a.id
+            ORDER BY c.berlaut DESC
+            LIMIT 5
+        '''
+        )
+        result = Snippet.dictfetchall(cursor)
+
+    more = []
+    for i in range(5):
+        if len(result) > i:
+            result[i]['rank'] = i + 1
+            more += [result[i]]
+        else:
+            template['rank'] = i + 1
+            more += [template]
+
+    context = {
+        "judul" : "Fisherman",
+        "icon": "images/fishing-rod.svg",
+        "keterangan_dibawah_judul": '''
+            <small>
+                <i>Ranking diurutkan berdasarkan </i>
+            </small>
+            <label class="badge badge-warning">banyak memancing/menombak</label>
+        ''',
+        "first" : more[0],
+        "more"  : more[1:]
+    }
+    return render(request, "rank-fisherman.html", context)
+
+def rank_lumberjack(request):
+    template = {
+        'rank': 0,
+        'uid': '',
+        'motong_pohon': 0,
+        'kayu': 0,
+        'avatar': '',
+        'nama': 'Tidak ada'
+    }
+
+    with connection.cursor() as cursor:
+        cursor.execute('''
+            SELECT a.nama, c.motong_pohon, c.kayu, b.avatar, b.uid
+            FROM ''' + settings.NAMA_DATABASE_SAMP + '''.user a
+            LEFT JOIN ''' + settings.NAMA_DATABASE_FORUM + '''.mybb_users b ON a.nama = b.username
+            LEFT JOIN ''' + settings.NAMA_DATABASE_SAMP + '''.user_achievement c ON c.id_user = a.id
+            ORDER BY c.motong_pohon DESC
+            LIMIT 5
+        '''
+        )
+        result = Snippet.dictfetchall(cursor)
+
+    more = []
+    for i in range(5):
+        if len(result) > i:
+            result[i]['rank'] = i + 1
+            more += [result[i]]
+        else:
+            template['rank'] = i + 1
+            more += [template]
+
+    context = {
+        "judul" : "Lumberjack",
+        "icon": "images/lumberjack.svg",
+        "keterangan_dibawah_judul": '''
+            <small>
+                <i>Ranking diurutkan berdasarkan </i>
+            </small>
+            <label class="badge badge-warning">banyak pohon dipotong</label>
+        ''',
+        "first" : more[0],
+        "more"  : more[1:]
+    }
+    return render(request, "rank-lumberjack.html", context)
+
+def rank_miner(request):
+    template = {
+        'rank': 0,
+        'uid': '',
+        'bertambang': 0,
+        'berlian': 0,
+        'emas': 0,
+        'aluminium': 0,
+        'besi': 0,
+        'avatar': '',
+        'nama': 'Tidak ada'
+    }
+
+    with connection.cursor() as cursor:
+        cursor.execute('''
+            SELECT a.nama, c.bertambang, c.berlian, c.emas, c.aluminium, c.besi, b.avatar, b.uid
+            FROM ''' + settings.NAMA_DATABASE_SAMP + '''.user a
+            LEFT JOIN ''' + settings.NAMA_DATABASE_FORUM + '''.mybb_users b ON a.nama = b.username
+            LEFT JOIN ''' + settings.NAMA_DATABASE_SAMP + '''.user_achievement c ON c.id_user = a.id
+            ORDER BY c.bertambang DESC
+            LIMIT 5
+        '''
+        )
+        result = Snippet.dictfetchall(cursor)
+
+    more = []
+    for i in range(5):
+        if len(result) > i:
+            result[i]['rank'] = i + 1
+            more += [result[i]]
+        else:
+            template['rank'] = i + 1
+            more += [template]
+
+    context = {
+        "judul" : "Miner",
+        "icon": "images/miner.svg",
+        "keterangan_dibawah_judul": '''
+            <small>
+                <i>Ranking diurutkan berdasarkan </i>
+            </small>
+            <label class="badge badge-warning">banyak menggali</label>
+        ''',
+        "first" : more[0],
+        "more"  : more[1:]
+    }
+    return render(request, "rank-miner.html", context)

@@ -1,0 +1,23 @@
+{% extends "rank-base.html" %}
+
+{% block first_place %}
+<tr>
+    <td>Pohon</td>
+    <td>{{ first.motong_pohon }}</td>
+</tr>
+<tr>
+    <td>Kayu</td>
+    <td>{{ first.kayu }}</td>
+</tr>
+{% endblock first_place %}
+
+{% block more_place %}
+<tr>
+    <td>Pohon</td>
+    <td>{{ i.motong_pohon }}</td>
+</tr>
+<tr>
+    <td>Kayu</td>
+    <td>{{ i.kayu }}</td>
+</tr>
+{% endblock more_place %}

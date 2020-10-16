@@ -69,6 +69,15 @@
     font-weight: bold;
 }
 
+.logo-text {
+    color: black;
+    transition: all .5s;
+}
+
+.logo-text:hover {
+    color: red;
+}
+
 .logo {
     margin-bottom: 5px;
 }
@@ -89,6 +98,180 @@
     font-size: 20px;
 }
 
-.logo a {
+.logo a, .logo-text {
     text-decoration: none;
+}
+
+
+span.light {
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    overflow: hidden;
+    left: 0;
+    top: 0;
+    -webkit-transform: skewX(0);
+    -moz-transform: skewX(0);
+    transform: skewX(0);
+}
+
+span.light:after {
+    content: '';
+    width: 80px;
+    height: 100%;
+    position: absolute;
+    z-index: 20;
+    transform: skewX(40deg);
+    background: #fff;
+    opacity: .2;
+    left: 50%;
+    top: 0;
+    animation-name: blinkbut;
+    -webkit-animation-duration:6s;
+    animation-duration: 6s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    -webkit-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+}
+
+span.light:before {
+    content: '';
+    width: 40px;
+    height: 100%;
+    position: absolute;
+    z-index: 20;
+    transform: skewX(40deg);
+    background: #fff;
+    opacity: .2;
+    left: 30%;
+    top: 0;
+    animation-name: blinkbut;
+    -webkit-animation-duration: 6s;
+    animation-duration: 6s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    -webkit-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+}
+
+@-webkit-keyframes blinkbut {
+    0% {
+        transform: translateX(-340px) skewX(40deg);
+        opacity: .0;
+    }
+    50% {
+        opacity: .3;
+    }
+    100% {
+        transform: translateX(400px) skewX(40deg);
+        opacity: .0;
+    }
+}
+
+@keyframes blinkbut {
+    0% {
+        transform: translateX(-340px) skewX(40deg);
+        opacity: .0;
+    }
+    50% {
+        opacity: .3;
+    }
+    100% {
+        transform: translateX(400px) skewX(40deg);
+        opacity: .0;
+    }
+}
+
+span.light-2 {
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    overflow: hidden;
+    left: 0;
+    top: 0;
+    -webkit-transform: skewX(0);
+    -moz-transform: skewX(0);
+    transform: skewX(0);
+}
+
+span.light-2:after {
+    content: '';
+    width: 80px;
+    height: 100%;
+    position: absolute;
+    z-index: 999;
+    transform: skewX(40deg);
+    background: #fff;
+    opacity: .5;
+    left: 50%;
+    top: 0;
+    animation-name: blinkbut-2;
+    -webkit-animation-duration:6s;
+    animation-duration: 6s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    -webkit-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+}
+
+span.light-2:before {
+    content: '';
+    width: 40px;
+    height: 100%;
+    position: absolute;
+    z-index: 999;
+    transform: skewX(40deg);
+    background: #fff;
+    opacity: .5;
+    left: 30%;
+    top: 0;
+    animation-name: blinkbut-2;
+    -webkit-animation-duration: 6s;
+    animation-duration: 6s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    -webkit-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+}
+
+@-webkit-keyframes blinkbut-2 {
+    0% {
+        transform: translateX(-340px) skewX(40deg);
+    }
+    100% {
+        transform: translateX(400px) skewX(40deg);
+    }
+}
+
+@keyframes blinkbut-2 {
+    0% {
+        transform: translateX(-340px) skewX(40deg);
+    }
+    100% {
+        transform: translateX(400px) skewX(40deg);
+    }
+}
+
+.card-category {
+    transition: box-shadow .3s;
+}
+
+.card-category:hover {
+    box-shadow: 0 6px 20px rgb(255, 255, 129);
+}
+
+a.link-category {
+    text-decoration: none !important;
+    color: black;
+}
+
+.preloader-circle {
+    border-top-color: red !important;
 }

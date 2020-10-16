@@ -1,0 +1,156 @@
+{% load static %}
+{% load main_extras %}
+{% load humanize %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>Rank Category &bull; Ranked Playverse Players</title>
+    <!-- Favicon-->
+    <link rel="icon" href="https://forum.playverse.org/favicon.ico" type="image/x-icon">
+
+    <!-- Bootstrap Core Css -->
+    <link href="{% static 'css/bootstrap-4.min.css' %}" rel="stylesheet">
+
+    <!-- Animation Css -->
+    <link href="{% static 'css/animate.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/rank.css' %}" rel="stylesheet" />
+</head>
+
+<body>
+    <div class="container-fluid py-2">
+        <div class="logo">
+            <a href="https://playverse.org/" target="_blank">
+                <img src="{% static 'images/logo.png' %}" class="logo" width="50px" />
+            </a>
+            <span class="display-4">Playverse Ranked Chart</span>
+            <label class="badge badge-warning">Beta</label>
+        </div>
+        <div class="d-flex align-items-center mt-2">
+            <div class="card w-100 border-red-glow">
+                <div class="card-header">
+                    <h3><img src="{% static 'images/ranking.svg' %}" width="50px" /> Playverse Ranked List Category</h3>
+                    <br />
+                    <label class="badge badge-danger">Tanggal Saat Ini</label>
+                    <small>- {% now "jS F Y H:i" %}</small>
+                </div>
+                <div class="card-body px-5 py-5">
+                    <div class="row">
+                        <!-- Richest -->
+                        <div class="col-md-3">
+                            <a href="{% url 'main:rank-richest' %}" class="link-category">
+                                <div class="card card-category mb-4">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <span class="light-2"></span>
+                                                <img src="{% static 'images/rich-man.svg' %}" width="50px" />
+                                            </div>
+                                            <div class="col-6">
+                                                <b>Richest</b>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <!-- End Richest -->
+                        <!-- Longest Playtime -->
+                        <div class="col-md-3">
+                            <a href="{% url 'main:rank-playtime' %}" class="link-category">
+                                <div class="card card-category mb-4">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <span class="light-2"></span>
+                                                <img src="{% static 'images/back-in-time.svg' %}" width="50px" />
+                                            </div>
+                                            <div class="col-6">
+                                                <b>Longest Playtime</b>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <!-- End Longest Playtime -->
+                        <!-- Fisherman -->
+                        <div class="col-md-3">
+                            <a href="{% url 'main:rank-fisherman' %}" class="link-category">
+                                <div class="card card-category mb-4">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <span class="light-2"></span>
+                                                <img src="{% static 'images/fishing-rod.svg' %}" width="50px" />
+                                            </div>
+                                            <div class="col-6">
+                                                <b>Fisherman</b>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <!-- End Fisherman -->
+                        <!-- Lumberjack -->
+                        <div class="col-md-3">
+                            <a href="{% url 'main:rank-lumberjack' %}" class="link-category">
+                                <div class="card card-category mb-4">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <span class="light-2"></span>
+                                                <img src="{% static 'images/lumberjack.svg' %}" width="50px" />
+                                            </div>
+                                            <div class="col-6">
+                                                <b>Lumberjack</b>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <!-- End Lumberjack -->
+                    </div>
+                    <div class="row">
+                        <!-- Miner -->
+                        <div class="col-md-3">
+                            <a href="{% url 'main:rank-miner' %}" class="link-category">
+                                <div class="card card-category mb-4">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <span class="light-2"></span>
+                                                <img src="{% static 'images/miner.svg' %}" width="50px" />
+                                            </div>
+                                            <div class="col-6">
+                                                <b>Miner</b>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <!-- End Miner -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+        <small>Copyright &copy; 2020 &bull; Playverse Official Teams</small>
+        <!-- Card -->
+    </div>
+
+    <!-- Jquery Core Js -->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+
+    <!-- Bootstrap Core Js -->
+    <script src="{% static 'js/bootstrap-4.min.js' %}"></script>
+</body>
+
+</html>

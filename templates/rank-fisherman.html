@@ -1,0 +1,55 @@
+{% extends "rank-base.html" %}
+
+{% block first_place %}
+<tr>
+    <td>Berlaut</td>
+    <td>{{ first.berlaut }}</td>
+</tr>
+<tr>
+    <td>Ikan Arwana</td>
+    <td>{{ first.ikan_arwana }}</td>
+</tr>
+<tr>
+    <td>Ikan Kakap</td>
+    <td>{{ first.ikan_kakap }}</td>
+</tr>
+<tr>
+    <td>Ikan Mas</td>
+    <td>
+        {{ first.ikan_mas }}
+    </td>
+</tr>
+<tr>
+    <td>Ikan Mujair</td>
+    <td>
+        {{ first.ikan_mujair }}
+    </td>
+</tr>
+{% endblock first_place %}
+
+{% block more_place %}
+<tr>
+    <td>Berlaut</td>
+    <td>{{ i.berlaut }}</td>
+</tr>
+<tr>
+    <td>Ikan Arwana</td>
+    <td>{{ i.ikan_arwana }}</td>
+</tr>
+<tr>
+    <td>Ikan Kakap</td>
+    <td>{{ i.ikan_kakap }}</td>
+</tr>
+<tr>
+    <td>Ikan Mas</td>
+    <td>
+        {{ i.ikan_mas }}
+    </td>
+</tr>
+<tr>
+    <td>Ikan Mujair</td>
+    <td>
+        {{ i.ikan_mujair }}
+    </td>
+</tr>
+{% endblock more_place %}

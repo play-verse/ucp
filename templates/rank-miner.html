@@ -1,0 +1,47 @@
+{% extends "rank-base.html" %}
+
+{% block first_place %}
+<tr>
+    <td>Menggali</td>
+    <td>{{ first.bertambang }}</td>
+</tr>
+<tr>
+    <td>Berlian</td>
+    <td>{{ first.berlian }}</td>
+</tr>
+<tr>
+    <td>Emas</td>
+    <td>{{ first.emas }}</td>
+</tr>
+<tr>
+    <td>Aluminium</td>
+    <td>{{ first.aluminium }}</td>
+</tr>
+<tr>
+    <td>Besi</td>
+    <td>{{ first.besi }}</td>
+</tr>
+{% endblock first_place %}
+
+{% block more_place %}
+<tr>
+    <td>Menggali</td>
+    <td>{{ i.bertambang }}</td>
+</tr>
+<tr>
+    <td>Berlian</td>
+    <td>{{ i.berlian }}</td>
+</tr>
+<tr>
+    <td>Emas</td>
+    <td>{{ i.emas }}</td>
+</tr>
+<tr>
+    <td>Aluminium</td>
+    <td>{{ i.aluminium }}</td>
+</tr>
+<tr>
+    <td>Besi</td>
+    <td>{{ i.besi }}</td>
+</tr>
+{% endblock more_place %}

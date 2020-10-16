@@ -1,62 +1,22 @@
 {% extends "rank-base.html" %}
 
-{% load static %}
-{% load main_extras %}
 {% load humanize %}
 
-{% block content %}
+{% block first_place %}
+<tr>
+    <td>Total Kekayaan</td>
+    <td><label
+            class="badge badge-pill badge-success">${{ first.uang_bank|add:first.uang|intcomma }}</label>
+    </td>
+</tr>
+{% endblock first_place %}
 
-<!-- Player dengan posisi 1st -->
-<div class="col-lg-4 d-flex justify-content-center col-rank">
-    <a href="{{ 'https://forum.playverse.org/member.php?action=profile&uid='|addstr:first.uid }}"
-        class="user-link w-100">
-        <div class="card ranked rank-first">
-            <img src="{{ 'https://forum.playverse.org/'|addstr:first.avatar }}" class="card-img-top"
-                onerror="this.onerror=null; this.src=`{% static 'images/logo.png' %}`;" alt="">
-            <div class="card-body">
-                <span class="nama-player">
-                    <label class="badge badge-success">{{ first.rank }}</label> {{ first.nama }}
-                </span>
-                <table class="table table-striped">
-                    <tbody>
-                        <tr>
-                            <td>Total Kekayaan</td>
-                            <td><label
-                                    class="badge badge-pill badge-success">${{ first.uang_bank|add:first.uang|intcomma }}</label>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </a>
-</div>
-<!-- End 1st place -->
-{% for i in more %}
-<div class="mt-2 col-lg-2 col-rank">
-    <a href="{{ 'https://forum.playverse.org/member.php?action=profile&uid='|addstr:i.uid }}" class="user-link w-100">
-        <div class="card ranked">
-            <img src="{{ 'https://forum.playverse.org/'|addstr:i.avatar }}" class="card-img-top"
-                onerror="this.onerror=null; this.src=`{% static 'images/logo.png' %}`;" width="100%" height="100%"
-                alt="">
-            <div class="card-body">
-                <span class="nama-player">
-                    <label class="badge badge-warning">{{ i.rank }}</label> {{ i.nama }}
-                </span>
-                <table class="table table-striped">
-                    <tbody>
-                        <tr>
-                            <td>Total Kekayaan</td>
-                            <td><label
-                                    class="badge badge-pill badge-success">${{ i.uang_bank|add:i.uang|intcomma }}</label>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </a>
-</div>
-{% endfor %}
 
-{% endblock content %}
+{% block more_place %}
+<tr>
+    <td>Total Kekayaan</td>
+    <td><label
+            class="badge badge-pill badge-success">${{ i.uang_bank|add:i.uang|intcomma }}</label>
+    </td>
+</tr>
+{% endblock more_place %}

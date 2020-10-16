@@ -12,6 +12,10 @@ urlpatterns = [
     # Ranked
     path('rank/richest', views.rank_richest, name="rank-richest"),
     path('rank/playtime', views.rank_playtime, name="rank-playtime"),
+    path('rank/fisherman', views.rank_fisherman, name="rank-fisherman"),
+    path('rank/lumberjack', views.rank_lumberjack, name="rank-lumberjack"),
+    path('rank/miner', views.rank_miner, name="rank-miner"),
+    path('rank/', views.ranked, name="ranked"),
     # path('rank/', views.ranked, name="rank"),
     
     path('', views.index, name='index'),
