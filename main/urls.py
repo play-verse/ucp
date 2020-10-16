@@ -15,6 +15,11 @@ urlpatterns = [
     path('rank/fisherman', views.rank_fisherman, name="rank-fisherman"),
     path('rank/lumberjack', views.rank_lumberjack, name="rank-lumberjack"),
     path('rank/miner', views.rank_miner, name="rank-miner"),
+    path('rank/level', views.rank_level, name="rank-level"),
+    # Job Ranked
+    path('rank/sweeper', views.rank_sweeper, name="rank-sweeper"),
+    path('rank/pizzaboy', views.rank_pizzaboy, name="rank-pizzaboy"),
+    path('rank/trashmaster', views.rank_trashmaster, name="rank-trashmaster"),
     path('rank/', views.ranked, name="ranked"),
     # path('rank/', views.ranked, name="rank"),
     

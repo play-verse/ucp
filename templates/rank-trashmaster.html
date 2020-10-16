@@ -1,0 +1,17 @@
+{% extends "rank-base.html" %}
+
+{% load humanize %}
+
+{% block first_place %}
+<tr>
+    <td>Trashmaster</td>
+    <td>{{ first.trashmaster|intcomma }}</td>
+</tr>
+{% endblock first_place %}
+
+{% block more_place %}
+<tr>
+    <td>Trashmaster</td>
+    <td>{{ i.trashmaster|intcomma }}</td>
+</tr>
+{% endblock more_place %}

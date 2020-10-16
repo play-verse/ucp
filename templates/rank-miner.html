@@ -1,47 +1,73 @@
 {% extends "rank-base.html" %}
 
+{% load humanize %}
+
 {% block first_place %}
 <tr>
     <td>Menggali</td>
-    <td>{{ first.bertambang }}</td>
+    <td>{{ first.bertambang|intcomma }}</td>
 </tr>
 <tr>
     <td>Berlian</td>
-    <td>{{ first.berlian }}</td>
+    <td>{{ first.berlian|intcomma }}</td>
 </tr>
 <tr>
     <td>Emas</td>
-    <td>{{ first.emas }}</td>
+    <td>{{ first.emas|intcomma }}</td>
 </tr>
 <tr>
     <td>Aluminium</td>
-    <td>{{ first.aluminium }}</td>
+    <td>{{ first.aluminium|intcomma }}</td>
+</tr>
+<tr>
+    <td>Perak</td>
+    <td>{{ first.perak|intcomma }}</td>
 </tr>
 <tr>
     <td>Besi</td>
-    <td>{{ first.besi }}</td>
+    <td>{{ first.besi|intcomma }}</td>
+</tr>
+<tr>
+    <td>Batu Bara</td>
+    <td>{{ first.batu_bara|intcomma }}</td>
+</tr>
+<tr>
+    <td>Batu Bata</td>
+    <td>{{ first.batu_bata|intcomma }}</td>
 </tr>
 {% endblock first_place %}
 
 {% block more_place %}
 <tr>
     <td>Menggali</td>
-    <td>{{ i.bertambang }}</td>
+    <td>{{ i.bertambang|intcomma }}</td>
 </tr>
 <tr>
     <td>Berlian</td>
-    <td>{{ i.berlian }}</td>
+    <td>{{ i.berlian|intcomma }}</td>
 </tr>
 <tr>
     <td>Emas</td>
-    <td>{{ i.emas }}</td>
+    <td>{{ i.emas|intcomma }}</td>
 </tr>
 <tr>
     <td>Aluminium</td>
-    <td>{{ i.aluminium }}</td>
+    <td>{{ i.aluminium|intcomma }}</td>
+</tr>
+<tr>
+    <td>Perak</td>
+    <td>{{ i.perak|intcomma }}</td>
 </tr>
 <tr>
     <td>Besi</td>
-    <td>{{ i.besi }}</td>
+    <td>{{ i.besi|intcomma }}</td>
+</tr>
+<tr>
+    <td>Batu Bara</td>
+    <td>{{ i.batu_bara|intcomma }}</td>
+</tr>
+<tr>
+    <td>Batu Bata</td>
+    <td>{{ i.batu_bata|intcomma }}</td>
 </tr>
 {% endblock more_place %}

@@ -1,0 +1,17 @@
+{% extends "rank-base.html" %}
+
+{% load humanize %}
+
+{% block first_place %}
+<tr>
+    <td>Sweeper</td>
+    <td>{{ first.sweeper|intcomma }}</td>
+</tr>
+{% endblock first_place %}
+
+{% block more_place %}
+<tr>
+    <td>Sweeper</td>
+    <td>{{ i.sweeper|intcomma }}</td>
+</tr>
+{% endblock more_place %}

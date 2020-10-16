@@ -1,0 +1,33 @@
+{% extends "rank-base.html" %}
+
+{% load humanize %}
+
+{% block first_place %}
+<tr>
+    <td>Level</td>
+    <td>{{ first.score|intcomma }}</td>
+</tr>
+<tr>
+    <td>Exp</td>
+    <td>{{ first.exp_score|intcomma }}</td>
+</tr>
+<tr>
+    <td>Nama Rank</td>
+    <td>{{ first.nama_ranked }}</td>
+</tr>
+{% endblock first_place %}
+
+{% block more_place %}
+<tr>
+    <td>Level</td>
+    <td>{{ i.score|intcomma }}</td>
+</tr>
+<tr>
+    <td>Exp</td>
+    <td>{{ i.exp_score|intcomma }}</td>
+</tr>
+<tr>
+    <td>Nama Rank</td>
+    <td>{{ i.nama_ranked }}</td>
+</tr>
+{% endblock more_place %}

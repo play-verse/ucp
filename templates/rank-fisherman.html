@@ -1,55 +1,81 @@
 {% extends "rank-base.html" %}
 
+{% load humanize %}
+
 {% block first_place %}
 <tr>
-    <td>Berlaut</td>
-    <td>{{ first.berlaut }}</td>
+    <td>Memancing</td>
+    <td>{{ first.berlaut|intcomma }}</td>
 </tr>
 <tr>
     <td>Ikan Arwana</td>
-    <td>{{ first.ikan_arwana }}</td>
+    <td>{{ first.ikan_arwana|intcomma }}</td>
 </tr>
 <tr>
     <td>Ikan Kakap</td>
-    <td>{{ first.ikan_kakap }}</td>
+    <td>{{ first.ikan_kakap|intcomma }}</td>
 </tr>
 <tr>
     <td>Ikan Mas</td>
     <td>
-        {{ first.ikan_mas }}
+        {{ first.ikan_mas|intcomma }}
     </td>
 </tr>
 <tr>
     <td>Ikan Mujair</td>
     <td>
-        {{ first.ikan_mujair }}
+        {{ first.ikan_mujair|intcomma }}
+    </td>
+</tr>
+<tr>
+    <td>Ubur Ubur</td>
+    <td>
+        {{ first.ubur_ubur|intcomma }}
+    </td>
+</tr>
+<tr>
+    <td>Bintang Laut</td>
+    <td>
+        {{ first.bintang_laut|intcomma }}
     </td>
 </tr>
 {% endblock first_place %}
 
 {% block more_place %}
 <tr>
-    <td>Berlaut</td>
-    <td>{{ i.berlaut }}</td>
+    <td>Memancing</td>
+    <td>{{ i.berlaut|intcomma }}</td>
 </tr>
 <tr>
     <td>Ikan Arwana</td>
-    <td>{{ i.ikan_arwana }}</td>
+    <td>{{ i.ikan_arwana|intcomma }}</td>
 </tr>
 <tr>
     <td>Ikan Kakap</td>
-    <td>{{ i.ikan_kakap }}</td>
+    <td>{{ i.ikan_kakap|intcomma }}</td>
 </tr>
 <tr>
     <td>Ikan Mas</td>
     <td>
-        {{ i.ikan_mas }}
+        {{ i.ikan_mas|intcomma }}
     </td>
 </tr>
 <tr>
     <td>Ikan Mujair</td>
     <td>
-        {{ i.ikan_mujair }}
+        {{ i.ikan_mujair|intcomma }}
+    </td>
+</tr>
+<tr>
+    <td>Ubur Ubur</td>
+    <td>
+        {{ i.ubur_ubur|intcomma }}
+    </td>
+</tr>
+<tr>
+    <td>Bintang Laut</td>
+    <td>
+        {{ i.bintang_laut|intcomma }}
     </td>
 </tr>
 {% endblock more_place %}

@@ -1,17 +1,19 @@
 {% extends 'rank-base.html' %}
 
+{% load humanize %}
+
 {% block first_place %}
 <tr>
     <td>Jam</td>
-    <td>{{ first.h }}</td>
+    <td>{{ first.h|intcomma }}</td>
 </tr>
 <tr>
     <td>Menit</td>
-    <td>{{ first.m }}</td>
+    <td>{{ first.m|intcomma }}</td>
 </tr>
 <tr>
     <td>Detik</td>
-    <td>{{ first.s }}</td>
+    <td>{{ first.s|intcomma }}</td>
 </tr>
 <tr>
     <td>Tanggal Register</td>
@@ -25,15 +27,15 @@
 {% block more_place %}
 <tr>
     <td>Jam</td>
-    <td>{{ i.h }}</td>
+    <td>{{ i.h|intcomma }}</td>
 </tr>
 <tr>
     <td>Menit</td>
-    <td>{{ i.m }}</td>
+    <td>{{ i.m|intcomma }}</td>
 </tr>
 <tr>
     <td>Detik</td>
-    <td>{{ i.s }}</td>
+    <td>{{ i.s|intcomma }}</td>
 </tr>
 <tr>
     <td colspan="2">Tanggal Register</td>

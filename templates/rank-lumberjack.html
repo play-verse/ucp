@@ -1,23 +1,25 @@
 {% extends "rank-base.html" %}
 
+{% load humanize %}
+
 {% block first_place %}
 <tr>
     <td>Pohon</td>
-    <td>{{ first.motong_pohon }}</td>
+    <td>{{ first.motong_pohon|intcomma }}</td>
 </tr>
 <tr>
     <td>Kayu</td>
-    <td>{{ first.kayu }}</td>
+    <td>{{ first.kayu|intcomma }}</td>
 </tr>
 {% endblock first_place %}
 
 {% block more_place %}
 <tr>
     <td>Pohon</td>
-    <td>{{ i.motong_pohon }}</td>
+    <td>{{ i.motong_pohon|intcomma }}</td>
 </tr>
 <tr>
     <td>Kayu</td>
-    <td>{{ i.kayu }}</td>
+    <td>{{ i.kayu|intcomma }}</td>
 </tr>
 {% endblock more_place %}
