@@ -1,0 +1,17 @@
+{% extends "rank-base.html" %}
+
+{% load humanize %}
+
+{% block first_place %}
+<tr>
+    <td>Electrician</td>
+    <td>{{ first.electric|intcomma }}</td>
+</tr>
+{% endblock first_place %}
+
+{% block more_place %}
+<tr>
+    <td>Electrician</td>
+    <td>{{ i.electric|intcomma }}</td>
+</tr>
+{% endblock more_place %}

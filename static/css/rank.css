@@ -275,3 +275,11 @@ a.link-category {
 .preloader-circle {
     border-top-color: red !important;
 }
+
+.cut-text { 
+    display: inline-block;
+    width: 150px;
+    white-space: nowrap;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
+}

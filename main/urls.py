@@ -20,6 +20,7 @@ urlpatterns = [
     path('rank/sweeper', views.rank_sweeper, name="rank-sweeper"),
     path('rank/pizzaboy', views.rank_pizzaboy, name="rank-pizzaboy"),
     path('rank/trashmaster', views.rank_trashmaster, name="rank-trashmaster"),
+    path('rank/electric', views.rank_electric, name="rank-electric"),
     path('rank/', views.ranked, name="ranked"),
     # path('rank/', views.ranked, name="rank"),
     

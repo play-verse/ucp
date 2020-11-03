@@ -685,3 +685,47 @@ def rank_trashmaster(request):
         "more"  : more[1:]
     }
     return render(request, "rank-trashmaster.html", context)
+
+def rank_electric(request):
+    template = {
+        'rank': 0,
+        'uid': '',
+        'electric': 0,
+        'avatar': '',
+        'nama': 'Tidak ada'
+    }
+
+    with connection.cursor() as cursor:
+        cursor.execute('''
+            SELECT a.nama, c.electric, b.avatar, b.uid
+            FROM ''' + settings.NAMA_DATABASE_SAMP + '''.user a
+            LEFT JOIN ''' + settings.NAMA_DATABASE_FORUM + '''.mybb_users b ON a.nama = b.username
+            LEFT JOIN ''' + settings.NAMA_DATABASE_SAMP + '''.user_achievement c ON c.id_user = a.id
+            ORDER BY c.electric DESC
+            LIMIT 5
+        '''
+        )
+        result = Snippet.dictfetchall(cursor)
+
+    more = []
+    for i in range(5):
+        if len(result) > i:
+            result[i]['rank'] = i + 1
+            more += [result[i]]
+        else:
+            template['rank'] = i + 1
+            more += [template]
+
+    context = {
+        "judul" : "Electrician",
+        "icon": "images/electrician.svg",
+        "keterangan_dibawah_judul": '''
+            <small>
+                <i>Ranking diurutkan berdasarkan </i>
+            </small>
+            <label class="badge badge-warning">banyak pekerjaan yang selesai</label>
+        ''',
+        "first" : more[0],
+        "more"  : more[1:]
+    }
+    return render(request, "rank-electric.html", context)
