@@ -4,19 +4,25 @@
 
 {% block first_place %}
 <tr>
-    <td>Total Kekayaan</td>
-    <td><label
-            class="badge badge-pill badge-success">${{ first.uang_bank|add:first.uang|intcomma }}</label>
+    <td class="bg-white">
+        Total kekayaan
     </td>
+</tr>
+<tr>
+    <td class="bg-success text-white text-right">${{ first.uang_bank|add:first.uang|intcomma }}
+    </td>    
 </tr>
 {% endblock first_place %}
 
 
 {% block more_place %}
 <tr>
-    <td>Total Kekayaan</td>
-    <td><label
-            class="badge badge-pill badge-success">${{ i.uang_bank|add:i.uang|intcomma }}</label>
+    <td class="bg-white">
+        Total kekayaan
+    </td>
+</tr>
+<tr>
+    <td class="bg-success text-white text-right">${{ i.uang_bank|add:i.uang|intcomma }}
     </td>
 </tr>
 {% endblock more_place %}

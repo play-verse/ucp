@@ -12,15 +12,15 @@ class Snippet:
         ]
     
     def get_nama_score(score):
-        if score <= 25:
-            return "Newbie"
-        elif score <= 50:
-            return "Training"
-        elif score <= 100:
-            return "Elite"
-        elif score <= 150:
-            return "Master"
-        elif score <= 200:
-            return "Pro"
-        elif score > 200:
-            return "Legend"
+        if score <= 5:
+            return '''<b style="color: grey;">Newbie</b>'''
+        elif score <= 10:
+            return '''<b style="color: green;">Training</b>'''
+        elif score <= 20:
+            return '''<b style="color: blue;">Elite</b>'''
+        elif score <= 35:
+            return '''<b style="color: orange;">Master</b>'''
+        elif score <= 49:
+            return '''<b style="color: purple;">Pro</b>'''
+        elif score >= 50:
+            return '''<b style="color: red;">Legend</b>'''

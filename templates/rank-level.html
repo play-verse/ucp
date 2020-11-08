@@ -9,11 +9,15 @@
 </tr>
 <tr>
     <td>Exp</td>
-    <td>{{ first.exp_score|intcomma }}</td>
+    <td>{{ first.exp_score|intcomma }}
+        {% ifequal first.nama_ranked '<b style="color: red;">Legend</b>' %}
+        <b class="animated flash infinite text-warning">(Max)</b>
+        {% endifequal %}
+    </td>
 </tr>
 <tr>
     <td>Nama Rank</td>
-    <td>{{ first.nama_ranked }}</td>
+    <td>{{ first.nama_ranked|safe }}</td>
 </tr>
 {% endblock first_place %}
 
@@ -24,10 +28,15 @@
 </tr>
 <tr>
     <td>Exp</td>
-    <td>{{ i.exp_score|intcomma }}</td>
+    <td>
+        {{ i.exp_score|intcomma }}
+        {% ifequal i.nama_ranked '<b style="color: red;">Legend</b>' %}
+        <b class="animated flash infinite text-warning">(Max)</b>
+        {% endifequal %}
+    </td>
 </tr>
 <tr>
     <td>Nama Rank</td>
-    <td>{{ i.nama_ranked }}</td>
+    <td>{{ i.nama_ranked|safe }}</td>
 </tr>
 {% endblock more_place %}
