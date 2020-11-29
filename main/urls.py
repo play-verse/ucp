@@ -8,6 +8,7 @@ urlpatterns = [
     path('login/', views.login),
     path('logout/', views.logout, name="logout"),
     path('akun-samp/daftar/', views.daftar_akun_samp, name="daftar_akun_samp"),
+    path('akun-samp/change-password/', views.change_password, name="change-password"),
     path('akun-samp/', views.akun_samp, name="akun_samp"),
     # Ranked
     path('rank/richest', views.rank_richest, name="rank-richest"),

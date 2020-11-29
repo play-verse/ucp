@@ -39,11 +39,11 @@
                                 <td class="text-success">${{ data.uang }}</td>
                             </tr>
                             <tr>
-                                <td>Lama waktu bermain</td>
-                                <td class="text-warning">{{ data.playtime }} detik</td>
+                                <td>Playtime</td>
+                                <td class="text-warning">{{ data.playtime_jam }} jam {{ data.playtime_menit }} menit {{ data.playtime_detik }} detik</td>
                             </tr>
                             <tr>
-                                <td>Tanggal Register</td>
+                                <td>Tanggal Bergabung</td>
                                 <td>{{ data.join_date }}</td>
                             </tr>
                             <tr>
@@ -56,6 +56,8 @@
                             </tr>
                         </tbody>
                     </table>
+
+                    <a href="{% url 'main:change-password' %}" class="btn btn-warning"><i class="material-icons">lock</i> <span>Ganti Password</span></a>
                 {% endif %}
             </div>
         </div>

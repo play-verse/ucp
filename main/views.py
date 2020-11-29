@@ -7,7 +7,7 @@ from django.conf import settings
 from django.contrib import messages
 
 from .models import Snippet
-from .forms import LoginForm, DaftarAkunForm
+from .forms import LoginForm, DaftarAkunForm, ChangePasswordForm
 
 def index(request):
     # Cek jika user belum login
@@ -104,7 +104,87 @@ def akun_samp(request):
         "judul": "Akun SA:MP",
         "data": result[0] if result else result,
     }
+    context['data']['playtime_menit'], context['data']['playtime_detik'] = divmod(context['data']['playtime'], 60)
+    context['data']['playtime_jam'], context['data']['playtime_menit'] = divmod(context['data']['playtime_menit'], 60)
+
     return render(request, "akun-samp.html", context)
+
+
+def change_password(request):
+    # Cek jika user belum login
+    if not is_sudah_login(request):
+        return HttpResponseRedirect('/logout/')
+
+    # Cek jika sudah memiliki akun samp
+    with connection.cursor() as cursor:
+        cursor.execute('''
+            SELECT *
+            FROM 
+            ''' + settings.NAMA_DATABASE_SAMP + '''.user 
+            WHERE 
+                nama = %s
+            ''',
+            [
+                request.session.get("username"),
+            ]
+        )
+        result = Snippet.dictfetchall(cursor)
+    
+    # Cek jika tidak ada akun sa-mp
+    if not result:
+        return HttpResponseRedirect("/akun-samp/change-password/")
+
+    if request.method == 'POST':
+        form = ChangePasswordForm(request.POST)
+        if form.is_valid():
+            if form.cleaned_data.get("new_password") != form.cleaned_data.get("confirm_password"):
+                messages.add_message(request, messages.ERROR, 'Password konfirmasi yang anda masukan tidak sama.')
+                return HttpResponseRedirect('/akun-samp/change-password/')
+
+            with connection.cursor() as cursor:
+                cursor.execute('''
+                    SELECT a.*
+                    FROM ''' + settings.NAMA_DATABASE_FORUM + '''.mybb_users a
+                    WHERE 
+                        username = %s AND 
+                        password = MD5(CONCAT(MD5(salt), MD5(%s)))
+                ''',
+                    [request.session.get("username"),
+                    form.cleaned_data.get("old_password")]
+                )
+                result = Snippet.dictfetchall(cursor)
+
+            if not result:
+                messages.error(request, "Password forum yang anda masukan salah.")
+                return HttpResponseRedirect('/akun-samp/change-password/')
+
+            # Daftarkan pemain
+            with connection.cursor() as cursor:
+                cursor.execute('''
+                    UPDATE ''' + settings.NAMA_DATABASE_SAMP + '''.`user` 
+                    SET password = %s
+                    WHERE nama = %s
+                ''',
+                    [
+                        hashlib.sha256((form.data.get("new_password") + request.session.get("username")).encode()).hexdigest().upper(),
+                        request.session.get("username")
+                    ]
+                )
+
+            messages.add_message(request, messages.SUCCESS, 'Berhasil mengganti password akun sa-mp.')
+            return HttpResponseRedirect('/akun-samp/')
+        # Jika form tidak valid
+        else:
+            messages.add_message(request, messages.ERROR, 'Inputan tidak valid.')
+            return HttpResponseRedirect('/akun-samp/change-password/')
+    else:
+        form = ChangePasswordForm()
+
+    context = {
+        "judul": "Ganti Password Akun SA:MP",
+        "form": form,
+    }
+    return render(request, "change-password-samp.html", context)
 
 def daftar_akun_samp(request):
     # Cek jika user belum login
