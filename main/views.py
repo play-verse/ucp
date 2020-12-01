@@ -1,10 +1,13 @@
 import hashlib
+import json, os, pytz
+from datetime import datetime
 
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.db import connection
 from django.conf import settings
 from django.contrib import messages
+from django.core import serializers
 
 from .models import Snippet
 from .forms import LoginForm, DaftarAkunForm, ChangePasswordForm
@@ -349,39 +352,7 @@ def ranked(request):
     return render(request, "rank.html", context)
 
 def rank_playtime(request):
-    template = {
-        'rank': 0,
-        'uid': '',
-        'h': 0,
-        'm': 0,
-        's': 0,
-        'join_date': 'Tidak ada',
-        'avatar': '',
-        'nama': 'Tidak ada'
-    }
-
-    with connection.cursor() as cursor:
-        cursor.execute('''
-            SELECT a.nama, a.playtime, a.join_date, b.avatar, b.uid
-            FROM ''' + settings.NAMA_DATABASE_SAMP + '''.user a
-            LEFT JOIN ''' + settings.NAMA_DATABASE_FORUM + '''.mybb_users b ON a.nama = b.username
-            ORDER BY a.playtime DESC
-            LIMIT 5
-        '''
-        )
-        result = Snippet.dictfetchall(cursor)
-
-    more = []
-    for i in range(5):
-        if len(result) > i:
-            result[i]['m'], result[i]['s'] = divmod(result[i]['playtime'], 60)
-            result[i]['h'], result[i]['m'] = divmod(result[i]['m'], 60)
-            result[i]['rank'] = i + 1
-            more += [result[i]]
-        else:
-            template['rank'] = i + 1
-            more += [template]
-
+    data, last_update = Snippet.fetch_rank("rank_playtime")
     context = {
         "judul" : "Longest Playing Time",
         "icon": "images/back-in-time.svg",
@@ -391,43 +362,14 @@ def rank_playtime(request):
             </small>
             <label class="badge badge-primary">Playtime</label> adalah <label class="badge badge-warning">detik</label>
         ''',
-        "first" : more[0],
-        "more"  : more[1:]
+        "first" : data[0],
+        "more"  : data[1:],
+        "last_update": datetime.fromtimestamp(last_update).strftime("%d %B %Y %H:%M")
     }
     return render(request, "rank-playtime.html", context)
 
 def rank_richest(request):
-    template = {
-        'rank': 0,
-        'uid': '',
-        'uang_bank': 0,
-        'uang': 0,
-        'avatar': '',
-        'nama': 'Tidak ada'
-    }
-
-    with connection.cursor() as cursor:
-        cursor.execute('''
-            SELECT a.nama, IFNULL(SUM(c.nominal), 0) AS uang_bank, a.uang, b.avatar, b.uid
-            FROM ''' + settings.NAMA_DATABASE_SAMP + '''.user a
-            LEFT JOIN ''' + settings.NAMA_DATABASE_SAMP + '''.trans_atm c ON a.id = c.id_user
-            LEFT JOIN ''' + settings.NAMA_DATABASE_FORUM + '''.mybb_users b ON a.nama = b.username
-            GROUP BY a.nama
-            ORDER BY uang + IFNULL(SUM(c.nominal), 0) DESC
-            LIMIT 5
-        '''
-        )
-        result = Snippet.dictfetchall(cursor)
-
-    more = []
-    for i in range(5):
-        if len(result) > i:
-            result[i]['rank'] = i + 1
-            more += [result[i]]
-        else:
-            template['rank'] = i + 1
-            more += [template]
-
+    data, last_update = Snippet.fetch_rank("rank_richest")
     context = {
         "judul" : "Richest Person",
         "icon": "images/rich-man.svg",
@@ -437,46 +379,14 @@ def rank_richest(request):
             </small>
             <label class="badge badge-primary">Uang Cash</label> + <label class="badge badge-primary">Saldo Bank</label>
         ''',
-        "first" : more[0],
-        "more"  : more[1:]
+        "first" : data[0],
+        "more"  : data[1:],
+        "last_update": datetime.fromtimestamp(last_update).strftime("%d %B %Y %H:%M")
     }
     return render(request, "rank-rich.html", context)
 
 def rank_fisherman(request):
-    template = {
-        'rank': 0,
-        'uid': '',
-        'berlaut': 0,
-        'ikan_arwana': 0,
-        'ikan_kakap': 0,
-        'ikan_mas': 0,
-        'ikan_mujair': 0,
-        'ubur_ubur': 0,
-        'bintang_laut': 0,
-        'avatar': '',
-        'nama': 'Tidak ada'
-    }
-
-    with connection.cursor() as cursor:
-        cursor.execute('''
-            SELECT a.nama, c.berlaut, c.ikan_arwana, c.ikan_kakap, c.ikan_mas, c.ikan_mujair, c.ubur_ubur, c.bintang_laut, b.avatar, b.uid
-            FROM ''' + settings.NAMA_DATABASE_SAMP + '''.user a
-            LEFT JOIN ''' + settings.NAMA_DATABASE_FORUM + '''.mybb_users b ON a.nama = b.username
-            LEFT JOIN ''' + settings.NAMA_DATABASE_SAMP + '''.user_achievement c ON c.id_user = a.id
-            ORDER BY c.berlaut DESC
-            LIMIT 5
-        '''
-        )
-        result = Snippet.dictfetchall(cursor)
-
-    more = []
-    for i in range(5):
-        if len(result) > i:
-            result[i]['rank'] = i + 1
-            more += [result[i]]
-        else:
-            template['rank'] = i + 1
-            more += [template]
+    data, last_update = Snippet.fetch_rank("rank_fisherman")
 
     context = {
         "judul" : "Fisherman",
@@ -487,41 +397,14 @@ def rank_fisherman(request):
             </small>
             <label class="badge badge-warning">banyak memancing/menombak</label>
         ''',
-        "first" : more[0],
-        "more"  : more[1:]
+        "first" : data[0],
+        "more"  : data[1:],
+        "last_update": datetime.fromtimestamp(last_update).strftime("%d %B %Y %H:%M")
     }
     return render(request, "rank-fisherman.html", context)
 
 def rank_lumberjack(request):
-    template = {
-        'rank': 0,
-        'uid': '',
-        'motong_pohon': 0,
-        'kayu': 0,
-        'avatar': '',
-        'nama': 'Tidak ada'
-    }
-
-    with connection.cursor() as cursor:
-        cursor.execute('''
-            SELECT a.nama, c.motong_pohon, c.kayu, b.avatar, b.uid
-            FROM ''' + settings.NAMA_DATABASE_SAMP + '''.user a
-            LEFT JOIN ''' + settings.NAMA_DATABASE_FORUM + '''.mybb_users b ON a.nama = b.username
-            LEFT JOIN ''' + settings.NAMA_DATABASE_SAMP + '''.user_achievement c ON c.id_user = a.id
-            ORDER BY c.motong_pohon DESC
-            LIMIT 5
-        '''
-        )
-        result = Snippet.dictfetchall(cursor)
-
-    more = []
-    for i in range(5):
-        if len(result) > i:
-            result[i]['rank'] = i + 1
-            more += [result[i]]
-        else:
-            template['rank'] = i + 1
-            more += [template]
+    data, last_update = Snippet.fetch_rank("rank_lumberjack")
 
     context = {
         "judul" : "Lumberjack",
@@ -532,47 +415,14 @@ def rank_lumberjack(request):
             </small>
             <label class="badge badge-warning">banyak pohon dipotong</label>
         ''',
-        "first" : more[0],
-        "more"  : more[1:]
+        "first" : data[0],
+        "more"  : data[1:],
+        "last_update": datetime.fromtimestamp(last_update).strftime("%d %B %Y %H:%M")
     }
     return render(request, "rank-lumberjack.html", context)
 
 def rank_miner(request):
-    template = {
-        'rank': 0,
-        'uid': '',
-        'bertambang': 0,
-        'berlian': 0,
-        'emas': 0,
-        'aluminium': 0,
-        'perak': 0,
-        'besi': 0,
-        'batu_bara': 0,
-        'batu_bata': 0,
-        'avatar': '',
-        'nama': 'Tidak ada'
-    }
-
-    with connection.cursor() as cursor:
-        cursor.execute('''
-            SELECT a.nama, c.bertambang, c.berlian, c.emas, c.aluminium, c.besi, c.perak, c.batu_bara, c.batu_bata, b.avatar, b.uid
-            FROM ''' + settings.NAMA_DATABASE_SAMP + '''.user a
-            LEFT JOIN ''' + settings.NAMA_DATABASE_FORUM + '''.mybb_users b ON a.nama = b.username
-            LEFT JOIN ''' + settings.NAMA_DATABASE_SAMP + '''.user_achievement c ON c.id_user = a.id
-            ORDER BY c.bertambang DESC
-            LIMIT 5
-        '''
-        )
-        result = Snippet.dictfetchall(cursor)
-
-    more = []
-    for i in range(5):
-        if len(result) > i:
-            result[i]['rank'] = i + 1
-            more += [result[i]]
-        else:
-            template['rank'] = i + 1
-            more += [template]
+    data, last_update = Snippet.fetch_rank("rank_miner")
 
     context = {
         "judul" : "Miner",
@@ -583,42 +433,14 @@ def rank_miner(request):
             </small>
             <label class="badge badge-warning">banyak menggali</label>
         ''',
-        "first" : more[0],
-        "more"  : more[1:]
+        "first" : data[0],
+        "more"  : data[1:],
+        "last_update": datetime.fromtimestamp(last_update).strftime("%d %B %Y %H:%M")
     }
     return render(request, "rank-miner.html", context)
 
 def rank_level(request):
-    template = {
-        'rank': 0,
-        'uid': '',
-        'exp_score': 0,
-        'score': 0,
-        'avatar': '',
-        'nama_ranked': 'Tidak ada',
-        'nama': 'Tidak ada'
-    }
-
-    with connection.cursor() as cursor:
-        cursor.execute('''
-            SELECT a.nama, a.exp_score, a.score, b.avatar, b.uid
-            FROM ''' + settings.NAMA_DATABASE_SAMP + '''.user a
-            LEFT JOIN ''' + settings.NAMA_DATABASE_FORUM + '''.mybb_users b ON a.nama = b.username
-            ORDER BY a.exp_score DESC
-            LIMIT 5
-        '''
-        )
-        result = Snippet.dictfetchall(cursor)
-
-    more = []
-    for i in range(5):
-        if len(result) > i:
-            result[i]['rank'] = i + 1
-            result[i]['nama_ranked'] = Snippet.get_nama_score(result[i]['score'])
-            more += [result[i]]
-        else:
-            template['rank'] = i + 1
-            more += [template]
+    data, last_update = Snippet.fetch_rank("rank_level")
 
     context = {
         "judul" : "Level",
@@ -629,40 +451,14 @@ def rank_level(request):
             </small>
             <label class="badge badge-warning">Exp yang juga mewakili level</label>
         ''',
-        "first" : more[0],
-        "more"  : more[1:]
+        "first" : data[0],
+        "more"  : data[1:],
+        "last_update": datetime.fromtimestamp(last_update).strftime("%d %B %Y %H:%M")
     }
     return render(request, "rank-level.html", context)
 
 def rank_sweeper(request):
-    template = {
-        'rank': 0,
-        'uid': '',
-        'sweeper': 0,
-        'avatar': '',
-        'nama': 'Tidak ada'
-    }
-
-    with connection.cursor() as cursor:
-        cursor.execute('''
-            SELECT a.nama, c.sweeper, b.avatar, b.uid
-            FROM ''' + settings.NAMA_DATABASE_SAMP + '''.user a
-            LEFT JOIN ''' + settings.NAMA_DATABASE_FORUM + '''.mybb_users b ON a.nama = b.username
-            LEFT JOIN ''' + settings.NAMA_DATABASE_SAMP + '''.user_achievement c ON c.id_user = a.id
-            ORDER BY c.sweeper DESC
-            LIMIT 5
-        '''
-        )
-        result = Snippet.dictfetchall(cursor)
-
-    more = []
-    for i in range(5):
-        if len(result) > i:
-            result[i]['rank'] = i + 1
-            more += [result[i]]
-        else:
-            template['rank'] = i + 1
-            more += [template]
+    data, last_update = Snippet.fetch_rank("rank_sweeper")
 
     context = {
         "judul" : "Sweeper",
@@ -673,40 +469,14 @@ def rank_sweeper(request):
             </small>
             <label class="badge badge-warning">banyak pekerjaan yang selesai</label>
         ''',
-        "first" : more[0],
-        "more"  : more[1:]
+        "first" : data[0],
+        "more"  : data[1:],
+        "last_update": datetime.fromtimestamp(last_update).strftime("%d %B %Y %H:%M")
     }
     return render(request, "rank-sweeper.html", context)
 
 def rank_pizzaboy(request):
-    template = {
-        'rank': 0,
-        'uid': '',
-        'pizzaboy': 0,
-        'avatar': '',
-        'nama': 'Tidak ada'
-    }
-
-    with connection.cursor() as cursor:
-        cursor.execute('''
-            SELECT a.nama, c.pizzaboy, b.avatar, b.uid
-            FROM ''' + settings.NAMA_DATABASE_SAMP + '''.user a
-            LEFT JOIN ''' + settings.NAMA_DATABASE_FORUM + '''.mybb_users b ON a.nama = b.username
-            LEFT JOIN ''' + settings.NAMA_DATABASE_SAMP + '''.user_achievement c ON c.id_user = a.id
-            ORDER BY c.pizzaboy DESC
-            LIMIT 5
-        '''
-        )
-        result = Snippet.dictfetchall(cursor)
-
-    more = []
-    for i in range(5):
-        if len(result) > i:
-            result[i]['rank'] = i + 1
-            more += [result[i]]
-        else:
-            template['rank'] = i + 1
-            more += [template]
+    data, last_update = Snippet.fetch_rank("rank_pizzaboy")
 
     context = {
         "judul" : "Pizzaboy",
@@ -717,40 +487,14 @@ def rank_pizzaboy(request):
             </small>
             <label class="badge badge-warning">banyak pekerjaan yang selesai</label>
         ''',
-        "first" : more[0],
-        "more"  : more[1:]
+        "first" : data[0],
+        "more"  : data[1:],
+        "last_update": datetime.fromtimestamp(last_update).strftime("%d %B %Y %H:%M")
     }
     return render(request, "rank-pizzaboy.html", context)
 
 def rank_trashmaster(request):
-    template = {
-        'rank': 0,
-        'uid': '',
-        'trashmaster': 0,
-        'avatar': '',
-        'nama': 'Tidak ada'
-    }
-
-    with connection.cursor() as cursor:
-        cursor.execute('''
-            SELECT a.nama, c.trashmaster, b.avatar, b.uid
-            FROM ''' + settings.NAMA_DATABASE_SAMP + '''.user a
-            LEFT JOIN ''' + settings.NAMA_DATABASE_FORUM + '''.mybb_users b ON a.nama = b.username
-            LEFT JOIN ''' + settings.NAMA_DATABASE_SAMP + '''.user_achievement c ON c.id_user = a.id
-            ORDER BY c.trashmaster DESC
-            LIMIT 5
-        '''
-        )
-        result = Snippet.dictfetchall(cursor)
-
-    more = []
-    for i in range(5):
-        if len(result) > i:
-            result[i]['rank'] = i + 1
-            more += [result[i]]
-        else:
-            template['rank'] = i + 1
-            more += [template]
+    data, last_update = Snippet.fetch_rank("rank_trashmaster")
 
     context = {
         "judul" : "Trashmaster",
@@ -761,40 +505,14 @@ def rank_trashmaster(request):
             </small>
             <label class="badge badge-warning">banyak pekerjaan yang selesai</label>
         ''',
-        "first" : more[0],
-        "more"  : more[1:]
+        "first" : data[0],
+        "more"  : data[1:],
+        "last_update": datetime.fromtimestamp(last_update).strftime("%d %B %Y %H:%M")
     }
     return render(request, "rank-trashmaster.html", context)
 
 def rank_electric(request):
-    template = {
-        'rank': 0,
-        'uid': '',
-        'electric': 0,
-        'avatar': '',
-        'nama': 'Tidak ada'
-    }
-
-    with connection.cursor() as cursor:
-        cursor.execute('''
-            SELECT a.nama, c.electric, b.avatar, b.uid
-            FROM ''' + settings.NAMA_DATABASE_SAMP + '''.user a
-            LEFT JOIN ''' + settings.NAMA_DATABASE_FORUM + '''.mybb_users b ON a.nama = b.username
-            LEFT JOIN ''' + settings.NAMA_DATABASE_SAMP + '''.user_achievement c ON c.id_user = a.id
-            ORDER BY c.electric DESC
-            LIMIT 5
-        '''
-        )
-        result = Snippet.dictfetchall(cursor)
-
-    more = []
-    for i in range(5):
-        if len(result) > i:
-            result[i]['rank'] = i + 1
-            more += [result[i]]
-        else:
-            template['rank'] = i + 1
-            more += [template]
+    data, last_update = Snippet.fetch_rank("rank_electric")
 
     context = {
         "judul" : "Electrician",
@@ -805,7 +523,8 @@ def rank_electric(request):
             </small>
             <label class="badge badge-warning">banyak pekerjaan yang selesai</label>
         ''',
-        "first" : more[0],
-        "more"  : more[1:]
+        "first" : data[0],
+        "more"  : data[1:],
+        "last_update": datetime.fromtimestamp(last_update).strftime("%d %B %Y %H:%M")
     }
     return render(request, "rank-electric.html", context)

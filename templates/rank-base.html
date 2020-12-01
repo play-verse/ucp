@@ -51,7 +51,10 @@
                     {{ keterangan_dibawah_judul|safe }}
                     <br />
                     <label class="badge badge-danger">Tanggal Saat Ini</label>
-                    <small>- {% now "jS F Y H:i" %}</small>
+                    <small>- {% now "j F Y H:i" %}</small><br/>
+                    <label class="badge badge-primary">Last Update</label>
+                    <small>- {{ last_update }} </small></br>
+                    <small>Diperbaharui setiap</small> <label class="badge badge-success">{% settings_value "DEFAULT_RESET_RANK" %}</label> <small>detik</small>
                 </div>
                 <div class="card-body px-5 py-5">
                     <div class="row align-items-end">                        

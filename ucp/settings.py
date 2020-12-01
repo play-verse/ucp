@@ -177,3 +177,9 @@ MESSAGE_TAGS = {
 }
 
 DEFAULT_LIMIT_ITEM = 150
+
+DEFAULT_RESET_RANK = 60 * 5 # Dalam satuan detik
+RANK_JSON_TEMPLATE = {
+    "lastupdate": 0,
+    "data": []
+}
