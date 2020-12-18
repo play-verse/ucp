@@ -107,8 +107,9 @@ def akun_samp(request):
         "judul": "Akun SA:MP",
         "data": result[0] if result else result,
     }
-    context['data']['playtime_menit'], context['data']['playtime_detik'] = divmod(context['data']['playtime'], 60)
-    context['data']['playtime_jam'], context['data']['playtime_menit'] = divmod(context['data']['playtime_menit'], 60)
+    if result:
+        context['data']['playtime_menit'], context['data']['playtime_detik'] = divmod(context['data']['playtime'], 60)
+        context['data']['playtime_jam'], context['data']['playtime_menit'] = divmod(context['data']['playtime_menit'], 60)
 
     return render(request, "akun-samp.html", context)
 
