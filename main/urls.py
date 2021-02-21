@@ -22,8 +22,8 @@ urlpatterns = [
     path('rank/pizzaboy', views.rank_pizzaboy, name="rank-pizzaboy"),
     path('rank/trashmaster', views.rank_trashmaster, name="rank-trashmaster"),
     path('rank/electric', views.rank_electric, name="rank-electric"),
-    path('rank/', views.ranked, name="ranked"),
-    # path('rank/', views.ranked, name="rank"),
-    
+    path('rank/', views.ranked, name="ranked"),    
+    # Admin
+    path('setup/', views.setup, name="setup"),    
     path('', views.index, name='index'),
 ]

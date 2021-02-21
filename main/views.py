@@ -10,7 +10,7 @@ from django.contrib import messages
 from django.core import serializers
 
 from .models import Snippet
-from .forms import LoginForm, DaftarAkunForm, ChangePasswordForm
+from .forms import LoginForm, DaftarAkunForm, ChangePasswordForm, SetupForm
 
 def index(request):
     # Cek jika user belum login
@@ -58,6 +58,7 @@ def login(request):
                 request.session['avatar'] = result[0]['avatar']
                 request.session['email'] = result[0]['email']
                 request.session['gender'] = result[0]['fid3']
+                request.session['is_admin'] = result[0]['usergroup'] in (4, 8, 9)
                 return HttpResponseRedirect('/')
             else:
                 messages.error(request, "Username dan password yang anda masukan salah.")
@@ -81,6 +82,8 @@ def logout(request):
         del request.session['avatar']
     if request.session.get("email") != None:
         del request.session['email']
+    if request.session.get("is_admin") != None:
+        del request.session['is_admin']
     return HttpResponseRedirect('/login/')
 
 # Index Akun SA:MP
@@ -344,7 +347,8 @@ def is_sudah_login(request):
         request.session.get("username") == None or \
         request.session.get("avatar") == None or \
         request.session.get("email") == None or \
-        request.session.get("gender") == None)
+        request.session.get("gender") == None or \
+        request.session.get("is_admin") == None)
 
 # Ranked
 def ranked(request):
@@ -529,3 +533,77 @@ def rank_electric(request):
         "last_update": datetime.fromtimestamp(last_update).strftime("%d %B %Y %H:%M")
     }
     return render(request, "rank-electric.html", context)
+
+def setup(request):
+    # Cek jika user belum login
+    if not is_sudah_login(request):
+        return HttpResponseRedirect('/logout/')
+
+    if not request.session.get('is_admin'):
+        return HttpResponseRedirect('/')
+
+    # Fetch Setup
+    with connection.cursor() as cursor:
+        cursor.execute('''
+            SELECT *
+            FROM 
+            ''' + settings.NAMA_DATABASE_SAMP + '''.setup 
+            '''
+        )
+        result = Snippet.dictfetchall(cursor)
+
+    if request.method == 'POST':
+        form = SetupForm(request.POST)
+
+        if form.is_valid():
+            info = ""
+            for field in result:
+                if field['tipe_value'] == 1:
+                    nama_field = 'value_integer'
+                elif field['tipe_value'] == 2:
+                    nama_field = 'value_float'
+                elif field['tipe_value'] == 3:
+                    nama_field = 'value_string'
+                else:
+                    nama_field = 'value_text'
+                value = field[nama_field]
+
+                new_value = form.cleaned_data.get(str(field['nama_setup']).lower())
+                if new_value != value:
+                    info += "- " + form.fields[str(field['nama_setup']).lower()].label + ": " + str(value) + " => " + str(new_value) + "<br/>"
+                    with connection.cursor() as cursor:
+                        cursor.execute('''
+                            UPDATE ''' + settings.NAMA_DATABASE_SAMP + '''.setup 
+                            SET ''' + nama_field + ''' = %s
+                            WHERE nama_setup = %s
+                        ''',
+                            [
+                                new_value,
+                                field['nama_setup']
+                            ]
+                        )
+
+            messages.add_message(request, messages.SUCCESS, 'Berhasil mengubah setup server.<br/>' + info)
+            return HttpResponseRedirect('/setup/')
+        # Jika form tidak valid
+        else:
+            messages.add_message(request, messages.ERROR, "Invalid input.")
+    else:
+        form = SetupForm()
+        for i in result:
+            if i['tipe_value'] == 1:
+                value = i['value_integer']
+            elif i['tipe_value'] == 2:
+                value = i['value_float']
+            elif i['tipe_value'] == 3:
+                value = i['value_string']
+            else:
+                value = i['value_text']
+            form.fields[str(i['nama_setup']).lower()].initial = value
+            form.fields[str(i['nama_setup']).lower()].help_text = i['keterangan']
+
+    context = {
+        "judul": "Setup Server",
+        "form": form,
+    }
+    return render(request, "setup.html", context)

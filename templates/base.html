@@ -103,6 +103,14 @@
                             <span>Ranked</span>
                         </a>
                     </li>
+                    {% if request.session.is_admin %}
+                    <li>
+                        <a href="{% url 'main:setup' %}">
+                            <i class="material-icons">settings</i>
+                            <span>Setup Server</span>
+                        </a>
+                    </li>
+                    {% endif %}
                 </ul>
             </div>
             <!-- #Menu -->
@@ -123,7 +131,7 @@
     <section class="content">
         <div class="container-fluid">
             <div class="block-header">
-                <h2>{{judul}}</h2>
+                <h2>{{ judul|safe }}</h2>
             </div>
 
             <!-- Widgets -->
@@ -132,7 +140,7 @@
                     {% for message in messages %}
                     <div class="alert bg-{{ message.tags }} alert-dismissible" role="alert">
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        {{ message }}
+                        {{ message|safe }}
                     </div>
                     {% endfor %}
                 {% endif %}
