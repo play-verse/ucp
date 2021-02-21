@@ -183,3 +183,6 @@ RANK_JSON_TEMPLATE = {
     "lastupdate": 0,
     "data": []
 }
+
+# Klasifikasi admin dari user group pada akun forum
+ADMIN_FORUM_USERGROUPS_IDS = (4, 8, 9)

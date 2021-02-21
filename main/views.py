@@ -58,7 +58,7 @@ def login(request):
                 request.session['avatar'] = result[0]['avatar']
                 request.session['email'] = result[0]['email']
                 request.session['gender'] = result[0]['fid3']
-                request.session['is_admin'] = result[0]['usergroup'] in (4, 8, 9)
+                request.session['is_admin'] = result[0]['usergroup'] in settings.ADMIN_FORUM_USERGROUPS_IDS
                 return HttpResponseRedirect('/')
             else:
                 messages.error(request, "Username dan password yang anda masukan salah.")
