@@ -1,16 +1,18 @@
 import hashlib
-import json, os, pytz
 from datetime import datetime
 
+import numpy as np
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
-from django.db import connection
+from django.http import HttpResponseRedirect
+from django.db import connection, connections, transaction
 from django.conf import settings
 from django.contrib import messages
-from django.core import serializers
 
-from .models import Snippet
-from .forms import LoginForm, DaftarAkunForm, ChangePasswordForm, SetupForm
+from django.views.generic import ListView
+
+from .models import Snippet, MappingParent
+from .forms import LoginForm, DaftarAkunForm, ChangePasswordForm, SetupForm, MappingForm
+
 
 def index(request):
     # Cek jika user belum login
@@ -607,3 +609,212 @@ def setup(request):
         "form": form,
     }
     return render(request, "setup.html", context)
+
+class MappingListView(ListView):
+    def get(self, *args, **kwargs):
+        # Cek jika user belum login
+        if not is_sudah_login(self.request):
+            return HttpResponseRedirect('/logout/')
+
+        if not self.request.session.get('is_admin'):
+            return HttpResponseRedirect('/')
+        return super(MappingListView, self).get(*args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(MappingListView, self).get_context_data(**kwargs)
+        context['judul'] = "Mapping"
+        return context
+
+    model = MappingParent
+    template_name = 'mapping.html'
+    context_object_name = 'mappings'
+    paginate_by = 10
+    queryset = MappingParent.objects.using("samp").all()
+
+def mapping_form(request, type, id = None):
+    # Cek jika user belum login
+    if not is_sudah_login(request):
+        return HttpResponseRedirect('/logout/')
+
+    if not request.session.get('is_admin'):
+        return HttpResponseRedirect('/')
+
+    if request.method == 'POST':
+        form = MappingForm(request.POST)
+
+        if form.is_valid():
+            if type == "create":
+                if MappingParent.objects.using('samp').filter(mapping_name=form.cleaned_data.get("mapping_name")).count():
+                    messages.add_message(request, messages.ERROR, "Mapping name telah ada.")
+                else:
+                    is_rollback = False
+                    unknown_line, result_split = Snippet.validate_and_split_map(form.cleaned_data.get("objects"))
+                    if len(unknown_line) != 0:
+                        messages.add_message(request, messages.ERROR, "Invalid input script objects:<br>" + "<br>".join(unknown_line))
+                    else:
+                        # Start Transaction
+                        transaction.set_autocommit(False, using='samp')
+                        try:
+                            cursor = connections['samp'].cursor()
+                            cursor.execute('''
+                                INSERT INTO ''' + settings.NAMA_DATABASE_SAMP + '''.mapping_parent(mapping_name,loaded,keterangan)
+                                VALUES (%s, 0, %s)''', [form.cleaned_data.get("mapping_name"), form.cleaned_data.get("keterangan")]
+                            )
+
+                            extend_query = "VALUES"
+                            for i in range(len(result_split)):
+                                if i > 0:
+                                    extend_query += ","
+                                extend_query += "('" + form.cleaned_data.get("mapping_name") + "',%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+
+                            cursor.execute('''
+                                INSERT INTO ''' + settings.NAMA_DATABASE_SAMP + '''.mapping(mapping_name,is_object,object_id,pos_x,pos_y,pos_z,radius,rot_x,rot_y,rot_z) ''' + extend_query, np.array(result_split).flatten()
+                            )
+                        except:
+                            transaction.rollback(using='samp')
+                            is_rollback = True
+                            messages.add_message(request, messages.ERROR, "Terjadi kegagalan sistem pada saat menyimpan data.")
+                        else:
+                            transaction.commit(using='samp')
+                        finally:
+                            transaction.set_autocommit(True, using='samp')
+                        # End transaction
+
+                    if is_rollback == False:
+                        return HttpResponseRedirect('/mapping')
+            
+            elif type == "update":
+                is_rollback = False
+                if id == None:
+                    return HttpResponseRedirect('/mapping')
+                
+                obj = MappingParent.objects.using('samp').filter(mapping_name=id)
+                if obj.count() == 0:
+                    return HttpResponseRedirect('/mapping')
+                
+                unknown_line, result_split = Snippet.validate_and_split_map(form.cleaned_data.get("objects"))
+                if len(unknown_line) != 0:
+                    messages.add_message(request, messages.ERROR, "Invalid input script objects:<br>" + "<br>".join(unknown_line))
+                else:
+                    # Start Transaction
+                    transaction.set_autocommit(False, using='samp')
+                    try:
+                        cursor = connections['samp'].cursor()
+
+                        cursor.execute('''
+                            UPDATE ''' + settings.NAMA_DATABASE_SAMP + '''.mapping_parent SET keterangan = %s WHERE mapping_name = %s''', [form.cleaned_data.get("keterangan"), id]
+                        )
+
+                        cursor.execute('''
+                            DELETE FROM ''' + settings.NAMA_DATABASE_SAMP + '''.mapping WHERE mapping_name = %s''', [id]
+                        )
+
+                        extend_query = "VALUES"
+                        for i in range(len(result_split)):
+                            if i > 0:
+                                extend_query += ","
+                            extend_query += "('" + id + "',%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+
+                        cursor.execute('''
+                            INSERT INTO ''' + settings.NAMA_DATABASE_SAMP + '''.mapping(mapping_name,is_object,object_id,pos_x,pos_y,pos_z,radius,rot_x,rot_y,rot_z) ''' + extend_query, np.array(result_split).flatten()
+                        )
+
+                    except:
+                        transaction.rollback(using='samp')
+                        is_rollback = True
+                        messages.add_message(request, messages.ERROR, "Terjadi kegagalan sistem pada saat menyimpan data.")
+                    else:
+                        transaction.commit(using='samp')
+                    finally:
+                        transaction.set_autocommit(True, using='samp')
+                    # End Transaction
+                if is_rollback == False:
+                    return HttpResponseRedirect('/mapping')
+            else:
+                return HttpResponseRedirect('/')
+
+        # Jika form tidak valid
+        else:
+            messages.add_message(request, messages.ERROR, "Invalid input.")
+    else:
+        form = MappingForm()
+        if type == "update":
+            if id == None:
+                return HttpResponseRedirect('/mapping')
+            
+            obj = MappingParent.objects.using('samp').filter(mapping_name=id)
+            if obj.count() == 0:
+                return HttpResponseRedirect('/mapping')
+            obj = obj.values()[0]
+
+            if obj['loaded'] == 1:
+                messages.add_message(request, messages.ERROR, "🙅🏼‍♂️ Mapping tidak dapat <i>diupdate</i> karena masih terload di server.<br>🤷🏼‍♂️ Unload terlebih dahulu.")
+                return HttpResponseRedirect('/mapping')
+
+            form.fields['mapping_name'].initial = obj['mapping_name']
+            form.fields['mapping_name'].readonly = True
+            form.fields['keterangan'].initial = obj['keterangan']
+            form.fields['objects'].initial = ""
+
+            with connection.cursor() as cursor:
+                cursor.execute('''
+                    SELECT *
+                    FROM 
+                    ''' + settings.NAMA_DATABASE_SAMP + '''.mapping 
+                    WHERE 
+                        mapping_name = %s
+                    ''',
+                    [
+                        id,
+                    ]
+                )
+                result = Snippet.dictfetchall(cursor)
+
+            for map in result:
+                if map['is_object'] == 1:
+                    form.fields['objects'].initial += f"CreateDynamicObject({map['object_id']}, {map['pos_x']}, {map['pos_y']}, {map['pos_z']}, {map['rot_x']}, {map['rot_y']}, {map['rot_z']});\n"
+                else:
+                    form.fields['objects'].initial += f"RemoveBuildingForPlayer(playerid, {map['object_id']}, {map['pos_x']}, {map['pos_y']}, {map['pos_z']}, {map['radius']});\n"
+        elif type == "delete":
+            if id == None:
+                return HttpResponseRedirect('/mapping')
+            
+            obj = MappingParent.objects.using('samp').filter(mapping_name=id)
+            if obj.count() == 0:
+                return HttpResponseRedirect('/mapping')
+            
+            if obj.values()[0]['loaded'] == 1:
+                messages.add_message(request, messages.ERROR, "🙅🏼‍♂️ Mapping tidak dapat <i>dihapus</i> karena masih terload di server.<br>🤷🏼‍♂️ Unload terlebih dahulu.")
+                return HttpResponseRedirect('/mapping')
+
+            # Start Transaction
+            transaction.set_autocommit(False, using='samp')
+            try:
+                cursor = connections['samp'].cursor()
+
+                cursor.execute('''
+                    DELETE FROM ''' + settings.NAMA_DATABASE_SAMP + '''.mapping_parent WHERE mapping_name = %s''', [id]
+                )
+
+                cursor.execute('''
+                    DELETE FROM ''' + settings.NAMA_DATABASE_SAMP + '''.mapping WHERE mapping_name = %s''', [id]
+                )
+            except Exception as e:
+                transaction.rollback(using='samp')
+                is_rollback = True
+                print(e)
+                messages.add_message(request, messages.ERROR, "Terjadi kegagalan sistem pada saat menghapus data.")
+            else:
+                transaction.commit(using='samp')
+            finally:
+                transaction.set_autocommit(True, using='samp')
+            # End Transaction
+
+            messages.add_message(request, messages.SUCCESS, f"Berhasil menghapus mapping dengan nama <b>{id}</b>.")
+            return HttpResponseRedirect('/mapping')
+
+    context = {
+        "judul": "Mapping",
+        "form": form,
+    }
+    return render(request, "mapping-form.html", context)

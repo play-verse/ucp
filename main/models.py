@@ -4,6 +4,8 @@ from datetime import datetime
 from django.db import models, connection
 from django.conf import settings
 
+from re import match as regex_match
+
 class Snippet:
     def dictfetchall(cursor):
         "Return all rows from a cursor as a dict"
@@ -445,3 +447,50 @@ class Snippet:
             data = json_data['data']
             last_update = json_data['lastupdate']
         return data, last_update
+    
+    def validate_and_split_map(script):
+        unknown_line = []
+        # Result Index:
+        # 0: is_object => 1=object 0=removebuilding
+        # 1: object_id
+        # 2: x
+        # 3: y
+        # 4: z
+        # 5: radius
+        # 6: rx
+        # 7: ry
+        # 8: rz
+        result = []
+        script = script.strip()        
+        for string in script.split('\n'):
+            string = string.strip()
+            match = regex_match(r'(CreateDynamicObject|RemoveBuildingForPlayer|CreateObject)\(([^)]*)\)\;', string)
+            if match == None:
+                unknown_line += [string]
+                continue
+
+            try:
+                element = match.group(2).split(',')
+                if match.group(1) == "RemoveBuildingForPlayer":
+                    result += [
+                        [0, int(element[1]), float(element[2]), float(element[3]), float(element[4]), float(element[5]), 0, 0, 0]
+                    ]
+                else:
+                    result += [
+                        [1, int(element[0]), float(element[1]), float(element[2]), float(element[3]), 0, float(element[4]), float(element[5]), float(element[6])]
+                    ]
+            except ValueError as ex:
+                print(ex)
+                unknown_line += [string]
+            
+            
+        return unknown_line, result
+
+class MappingParent(models.Model):
+    mapping_name = models.CharField(primary_key=True, max_length=100)
+    loaded = models.IntegerField(blank=True, null=True)
+    keterangan = models.TextField(blank=True, null=True)
+    last_update = models.DateTimeField(blank=True, null=True)
+
+    class Meta:
+        db_table = 'mapping_parent'

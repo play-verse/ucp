@@ -25,5 +25,8 @@ urlpatterns = [
     path('rank/', views.ranked, name="ranked"),    
     # Admin
     path('setup/', views.setup, name="setup"),    
+    path('mapping/create/', views.mapping_form, {'type': 'create'}, name="mapping_form_create"),
+    path('mapping/<slug:type>/<slug:id>/', views.mapping_form, name="mapping_form"),
+    path('mapping/', views.MappingListView.as_view(), name="mapping"),
     path('', views.index, name='index'),
 ]

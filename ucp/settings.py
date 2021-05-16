@@ -86,6 +86,13 @@ DATABASES = {
         'NAME': 'pv_ucp',
         'USER': 'root',
         'PASSWORD': '',
+    },
+    'samp': {
+        'ENGINE': 'django.db.backends.mysql',
+        'HOST': '127.0.0.1',
+        'NAME': 'server_samp',
+        'USER': 'root',
+        'PASSWORD': '',
     }
 }
 

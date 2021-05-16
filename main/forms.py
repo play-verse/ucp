@@ -1,4 +1,6 @@
 from django import forms
+from django.core import validators
+from django.core.exceptions import ValidationError
 
 # Form validasi login
 class LoginForm(forms.Form):
@@ -54,4 +56,18 @@ class SetupForm(forms.Form):
         'type': 'text',
         'class': 'form-control',
         'onchange': "this.parentElement.parentElement.children[2].innerHTML = '';"
+    }))
+
+class MappingForm(forms.Form):
+    mapping_name = forms.CharField(label="Nama Mapping", widget=forms.TextInput(attrs={
+        'type': 'text',
+        'class': 'form-control',
+    }),
+    validators=[validators.validate_slug])
+    keterangan = forms.CharField(label="Keterangan", widget=forms.TextInput(attrs={
+        'type': 'text',
+        'class': 'form-control',
+    }))
+    objects = forms.CharField(widget=forms.Textarea(attrs={
+        'class': 'form-control',
     }))
