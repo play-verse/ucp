@@ -1,7 +1,6 @@
 import hashlib
 from datetime import datetime
 
-import numpy as np
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.db import connection, connections, transaction
@@ -668,9 +667,9 @@ def mapping_form(request, type, id = None):
                                 extend_query += "('" + form.cleaned_data.get("mapping_name") + "',%s,%s,%s,%s,%s,%s,%s,%s,%s)"
 
                             cursor.execute('''
-                                INSERT INTO ''' + settings.NAMA_DATABASE_SAMP + '''.mapping(mapping_name,is_object,object_id,pos_x,pos_y,pos_z,radius,rot_x,rot_y,rot_z) ''' + extend_query, np.array(result_split).flatten()
+                                INSERT INTO ''' + settings.NAMA_DATABASE_SAMP + '''.mapping(mapping_name,is_object,object_id,pos_x,pos_y,pos_z,radius,rot_x,rot_y,rot_z) ''' + extend_query, Snippet.flatten2d(result_split)
                             )
-                        except:
+                        except Exception as e:
                             transaction.rollback(using='samp')
                             is_rollback = True
                             messages.add_message(request, messages.ERROR, "Terjadi kegagalan sistem pada saat menyimpan data.")
@@ -716,7 +715,7 @@ def mapping_form(request, type, id = None):
                             extend_query += "('" + id + "',%s,%s,%s,%s,%s,%s,%s,%s,%s)"
 
                         cursor.execute('''
-                            INSERT INTO ''' + settings.NAMA_DATABASE_SAMP + '''.mapping(mapping_name,is_object,object_id,pos_x,pos_y,pos_z,radius,rot_x,rot_y,rot_z) ''' + extend_query, np.array(result_split).flatten()
+                            INSERT INTO ''' + settings.NAMA_DATABASE_SAMP + '''.mapping(mapping_name,is_object,object_id,pos_x,pos_y,pos_z,radius,rot_x,rot_y,rot_z) ''' + extend_query, Snippet.flatten2d(result_split)
                         )
 
                     except:
@@ -802,7 +801,6 @@ def mapping_form(request, type, id = None):
             except Exception as e:
                 transaction.rollback(using='samp')
                 is_rollback = True
-                print(e)
                 messages.add_message(request, messages.ERROR, "Terjadi kegagalan sistem pada saat menghapus data.")
             else:
                 transaction.commit(using='samp')

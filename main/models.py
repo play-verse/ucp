@@ -448,6 +448,9 @@ class Snippet:
             last_update = json_data['lastupdate']
         return data, last_update
     
+    def flatten2d(_2d_array):
+        return [item for row in _2d_array for item in row]
+
     def validate_and_split_map(script):
         unknown_line = []
         # Result Index:
@@ -480,9 +483,7 @@ class Snippet:
                         [1, int(element[0]), float(element[1]), float(element[2]), float(element[3]), 0, float(element[4]), float(element[5]), float(element[6])]
                     ]
             except ValueError as ex:
-                print(ex)
-                unknown_line += [string]
-            
+                unknown_line += [string]            
             
         return unknown_line, result
 
